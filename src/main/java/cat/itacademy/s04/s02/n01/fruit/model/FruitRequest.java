@@ -1,0 +1,28 @@
+package cat.itacademy.s04.s02.n01.fruit.model;
+
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+
+public class FruitRequest {
+    @NotBlank(message = "Name is required")
+    private String name;
+    @NotBlank(message = "Kilos are required")
+    @Min(value = 1, message = "Kilos must be at least 1")
+    private int weightInKilos;
+
+    public String getName() {
+        return name;
+    }
+
+    public int getWeightInKilos() {
+        return weightInKilos;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setWeightInKilos(int weightInKilos) {
+        this.weightInKilos = weightInKilos;
+    }
+}
