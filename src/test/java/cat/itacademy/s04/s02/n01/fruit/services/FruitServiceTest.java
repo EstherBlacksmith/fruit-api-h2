@@ -2,6 +2,7 @@ package cat.itacademy.s04.s02.n01.fruit.services;
 
 import cat.itacademy.s04.s02.n01.fruit.model.Fruit;
 import cat.itacademy.s04.s02.n01.fruit.model.FruitRequest;
+import cat.itacademy.s04.s02.n01.fruit.model.FruitResponse;
 import cat.itacademy.s04.s02.n01.fruit.repository.FruitRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,11 +39,10 @@ class FruitServiceTest {
 
         when(fruitRepository.save(any(Fruit.class))).thenReturn(fruit1);
 
-        Fruit savedFruit = fruitService.save(fruitRequest);
+        FruitResponse savedFruit = fruitService.save(fruitRequest);
 
         assertNotNull(savedFruit);
 
         Mockito.verify(fruitRepository, times(1)).save(any(Fruit.class));
     }
 }
-//verify(mockedList, never()).clear();

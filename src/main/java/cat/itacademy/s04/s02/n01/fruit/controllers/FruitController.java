@@ -1,13 +1,12 @@
 package cat.itacademy.s04.s02.n01.fruit.controllers;
 
-import cat.itacademy.s04.s02.n01.fruit.model.Fruit;
 import cat.itacademy.s04.s02.n01.fruit.model.FruitRequest;
+import cat.itacademy.s04.s02.n01.fruit.model.FruitResponse;
 import cat.itacademy.s04.s02.n01.fruit.services.FruitService;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/fruits")
@@ -19,9 +18,17 @@ public class FruitController {
         this.fruitService = fruitService;
     }
 
-    @PostMapping("/fruits")
-    public Fruit postFruit(@Valid @RequestBody FruitRequest fruitRequest) {
-        return fruitService.save(fruitRequest);
+    @PostMapping
+    public ResponseEntity<FruitResponse> createFruit(
+            @Valid @RequestBody FruitRequest fruitRequest) {
+
+        FruitResponse fruitResponse = fruitService.save(fruitRequest);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(fruitResponse);
+
+
     }
 
 

@@ -2,6 +2,7 @@ package cat.itacademy.s04.s02.n01.fruit.services;
 
 import cat.itacademy.s04.s02.n01.fruit.model.Fruit;
 import cat.itacademy.s04.s02.n01.fruit.model.FruitRequest;
+import cat.itacademy.s04.s02.n01.fruit.model.FruitResponse;
 import cat.itacademy.s04.s02.n01.fruit.repository.FruitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,13 +16,19 @@ public class FruitService {
         this.fruitRepository = fruitRepository;
     }
 
-    public Fruit save(FruitRequest fruitRequest) {
+    public FruitResponse save(FruitRequest fruitRequest) {
         Fruit fruit = new Fruit(
                 fruitRequest.getName(),
                 fruitRequest.getWeightInKilos()
         );
 
-        return fruitRepository.save(fruit);
+        Fruit saved = fruitRepository.save(fruit);
+
+        return new FruitResponse(
+                saved.getId(),
+                saved.getName(),
+                saved.getWeightInKilos()
+        );
     }
 
     //TODO: list getALlFruitrs

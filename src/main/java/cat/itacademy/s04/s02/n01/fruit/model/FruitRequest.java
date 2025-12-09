@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 public class FruitRequest {
     @NotBlank(message = "Name is required")
     private String name;
-    @NotBlank(message = "Kilos are required")
+
     @Min(value = 1, message = "Kilos must be at least 1")
     private int weightInKilos;
 
