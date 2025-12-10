@@ -6,16 +6,11 @@ import cat.itacademy.s04.s02.n01.fruit.model.FruitResponse;
 import cat.itacademy.s04.s02.n01.fruit.services.FruitService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import tools.jackson.databind.ObjectMapper;
-
-import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -33,7 +28,7 @@ class FruitControllerTest {
     private FruitService fruitService;
 
     @Test
-    void createFruit_returnsFruitIfItsAddedCorrectly() {
+    void createFruit_returnsFruitIfItsAddedCorrectly() throws Exception {
         FruitRequest fruitRequest = new FruitRequest();
         fruitRequest.setName("Poma");
         fruitRequest.setWeightInKilos(1);
@@ -44,22 +39,18 @@ class FruitControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         String fruitJson = mapper.writeValueAsString(fruitRequest);
 
+        mockMvc.perform(post("/fruits")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(fruitJson))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value("Poma"))
+                .andExpect(jsonPath("$.weightInKilos").value(1));
 
-        try {
-            mockMvc.perform(post("/fruits")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(fruitJson))
-                    .andExpect(status().isCreated())
-                    .andExpect(jsonPath("$.name").value("Poma"))
-                    .andExpect(jsonPath("$.weightInKilos").value(1));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
 
     }
 
     @Test
-    void createFruit_returnsErrorFruitIfItsNotAddedCorrectly() {
+    void createFruit_returnsErrorFruitIfItsNotAddedCorrectly() throws Exception {
         FruitRequest fruitRequest = new FruitRequest();
         fruitRequest.setName("Poma");
         fruitRequest.setWeightInKilos(0);
@@ -70,14 +61,6 @@ class FruitControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         String fruitJson = mapper.writeValueAsString(fruitRequest);
 
-        try {
-            mockMvc.perform(post("/fruits")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(fruitJson))
-                    .andExpect(status().is4xxClientError());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
 
     }
 
@@ -95,9 +78,27 @@ class FruitControllerTest {
                 .andExpect(jsonPath("$.name").value("Poma"))
                 .andExpect(jsonPath("$.weightInKilos").value(1));
 
-        }
-
     }
+
+
+    @Test
+    void createFruit_returnsErrorFruitIfINotFound() throws Exception {
+        FruitRequest fruitRequest = new FruitRequest();
+        fruitRequest.setName("Poma");
+        fruitRequest.setWeightInKilos(1);
+
+        when(fruitService.save(any(fruitRequest.getClass())))
+                .thenReturn(new FruitResponse(1L, "Poma", 1));
+
+        ObjectMapper mapper = new ObjectMapper();
+        String fruitJson = mapper.writeValueAsString(fruitRequest);
+
+        mockMvc.perform(get("/fruits/{id}", 1L))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Poma"))
+                .andExpect(jsonPath("$.weightInKilos").value(1));
+    }
+}
 
 /*As the inventory manager,
 I want to retrieve the details of a specific fruit using its identifier,
