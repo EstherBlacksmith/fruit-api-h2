@@ -45,8 +45,6 @@ class FruitControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("Poma"))
                 .andExpect(jsonPath("$.weightInKilos").value(1));
-
-
     }
 
     @Test
@@ -61,7 +59,10 @@ class FruitControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         String fruitJson = mapper.writeValueAsString(fruitRequest);
 
-
+        mockMvc.perform(post("/fruits")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(fruitJson))
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
