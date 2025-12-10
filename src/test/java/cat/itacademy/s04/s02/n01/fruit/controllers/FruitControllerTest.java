@@ -1,5 +1,6 @@
 package cat.itacademy.s04.s02.n01.fruit.controllers;
 
+import cat.itacademy.s04.s02.n01.fruit.exception.GlobalExceptionHandler;
 import cat.itacademy.s04.s02.n01.fruit.model.Fruit;
 import cat.itacademy.s04.s02.n01.fruit.model.FruitRequest;
 import cat.itacademy.s04.s02.n01.fruit.model.FruitResponse;
@@ -83,21 +84,18 @@ class FruitControllerTest {
 
 
     @Test
-    void createFruit_returnsErrorFruitIfINotFound() throws Exception {
-        FruitRequest fruitRequest = new FruitRequest();
-        fruitRequest.setName("Poma");
-        fruitRequest.setWeightInKilos(1);
+    void createFruit_returnsErrorIfFruitItsNotFound() throws Exception {
 
-        when(fruitService.save(any(fruitRequest.getClass())))
-                .thenReturn(new FruitResponse(1L, "Poma", 1));
+
+        when(fruitService.get(2L))
+                .thenReturn(GlobalExceptionHandler());
 
         ObjectMapper mapper = new ObjectMapper();
         String fruitJson = mapper.writeValueAsString(fruitRequest);
 
-        mockMvc.perform(get("/fruits/{id}", 1L))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Poma"))
-                .andExpect(jsonPath("$.weightInKilos").value(1));
+        mockMvc.perform(get("/fruits/{id}", 2L))
+                .andExpect(status().is4xxClientError());
+
     }
 }
 
