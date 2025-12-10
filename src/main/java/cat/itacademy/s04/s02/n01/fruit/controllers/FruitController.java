@@ -1,5 +1,6 @@
 package cat.itacademy.s04.s02.n01.fruit.controllers;
 
+import cat.itacademy.s04.s02.n01.fruit.model.Fruit;
 import cat.itacademy.s04.s02.n01.fruit.model.FruitRequest;
 import cat.itacademy.s04.s02.n01.fruit.model.FruitResponse;
 import cat.itacademy.s04.s02.n01.fruit.services.FruitService;
@@ -27,13 +28,27 @@ public class FruitController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(fruitResponse);
+    }
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Fruit> getFruit(
+            @PathVariable Long id) {
+
+        Fruit fruitResponse = fruitService.get(id);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(fruitResponse);
 
 
     }
+    //TODO: GET	/fruits/{id}	Obtenir una fruita per id
+
 
 
     //TODO: PUT	/fruits/{id}	Actualitzar fruita
     //TODO: DELETE	/fruits/{id}	Eliminar per id
-    //TODO: GET	/fruits/{id}	Obtenir una fruita per id
+
     //TODO: GET	/fruits	Obtenir totes les fruites
 }
