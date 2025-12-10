@@ -5,9 +5,10 @@ import cat.itacademy.s04.s02.n01.fruit.model.FruitResponse;
 import cat.itacademy.s04.s02.n01.fruit.services.FruitService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
@@ -22,7 +23,7 @@ class FruitControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private FruitService fruitService;
 
     @Test
@@ -50,4 +51,32 @@ class FruitControllerTest {
         }
 
     }
+
+    @Test
+    void createFruit_returnsErrorFruitIfItsNotAddedCorrectly() {
+        FruitRequest fruitRequest = new FruitRequest();
+        fruitRequest.setName("Poma");
+        fruitRequest.setWeightInKilos(0);
+
+        when(fruitService.save(any(fruitRequest.getClass())))
+                .thenReturn(new FruitResponse(1L, "Poma", 0));
+
+        ObjectMapper mapper = new ObjectMapper();
+        String fruitJson = mapper.writeValueAsString(fruitRequest);
+
+
+        try {
+            mockMvc.perform(post("/fruits")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(fruitJson))
+                    .andExpect(status().is4xxClientError());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
+
+
 }
