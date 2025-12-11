@@ -118,7 +118,6 @@ class FruitControllerTest {
 
     @Test
     void getFruits_returnsEmptyListIfArentFruitsInThInventoryANdhTTP200() throws Exception {
-
         List<Fruit> listFruit = new ArrayList<>();
 
         when(fruitService.getAll()).thenReturn(listFruit);
