@@ -7,6 +7,8 @@ import cat.itacademy.s04.s02.n01.fruit.repository.FruitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class FruitService {
@@ -35,6 +37,10 @@ public class FruitService {
     public Fruit get(Long id) {
         return fruitRepository.findById(id)
                 .orElseThrow();
+    }
+
+    public List<Fruit> getAll() {
+        return fruitRepository.findAll();
     }
 
     //TODO: list getALlFruitrs

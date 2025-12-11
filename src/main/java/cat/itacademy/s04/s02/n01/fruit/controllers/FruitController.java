@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/fruits")
 public class FruitController {
@@ -29,16 +31,6 @@ public class FruitController {
                 .status(HttpStatus.CREATED)
                 .body(fruitResponse);
     }
-/*
-    @GetMapping("/{id}")
-    public Fruit getUserFruit(@PathVariable Long id) {
-    Fruit fruit = fruitService.get(id);
-        if(fruit==null){
-            throw new FruitNotFoundException("Fruit doesn't exists");
-        }
-
-        return fruit;
-    }*/
 
 
     @GetMapping("/{id}")
@@ -52,11 +44,19 @@ public class FruitController {
 
 
     }
-    //TODO: GET	/fruits/{id}	Obtenir una fruita per id
 
+    @GetMapping("/")
+    public ResponseEntity<List<Fruit>>  getFruits() {
+
+        List<Fruit> listFruit= fruitService.getAll();
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(listFruit);
+    }
 
     //TODO: PUT	/fruits/{id}	Actualitzar fruita
     //TODO: DELETE	/fruits/{id}	Eliminar per id
 
-    //TODO: GET	/fruits	Obtenir totes les fruites
+
 }
