@@ -17,9 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -38,7 +38,7 @@ class FruitControllerTest {
         fruitRequest.setWeightInKilos(1);
 
         when(fruitService.save(any(fruitRequest.getClass())))
-                .thenReturn(new FruitResponse(1L, "Poma", 1));
+                .thenReturn(new FruitResponse(eq(1L), "Poma", 1));
 
         ObjectMapper mapper = new ObjectMapper();
         String fruitJson = mapper.writeValueAsString(fruitRequest);
@@ -88,7 +88,7 @@ class FruitControllerTest {
 
     @Test
     void createFruit_returnsErrorIfFruitItsNotFound() throws Exception {
-        when(fruitService.get(2L))
+        when(fruitService.get(eq(2L)))
                 .thenThrow(new FruitNotFoundException("Fruit doesn't exist"));
 
         mockMvc.perform(get("/fruits/{id}", 2L))
@@ -141,28 +141,22 @@ class FruitControllerTest {
     void updateFruit_returnOkAndTheUpdatedFruitIfTheDataIsValidAndTheFruitExists() throws Exception {
 
         FruitRequest fruitRequest = new FruitRequest();
-        fruitRequest.setName("Poma");
-        fruitRequest.setWeightInKilos(1);
-
-        when(fruitService.save(any(fruitRequest.getClass())))
-                .thenReturn(new FruitResponse(1L, "Poma", 1));
-
-        FruitRequest fruitRequest2 = new FruitRequest();
         fruitRequest.setName("Taronja");
-        fruitRequest.setWeightInKilos(2);
+        fruitRequest.setWeightInKilos(11);
 
-        when(fruitService.update(id, any(fruitRequest.getClass())))
-                .thenReturn(new FruitResponse(1L, "Taronja", 2));
+        when(fruitService.update(eq(1L), any(FruitRequest.class)))
+                .thenReturn(new FruitResponse(1L, "Taronja", 11));
 
         ObjectMapper mapper = new ObjectMapper();
-        String fruitJson = mapper.writeValueAsString(fruitRequest2);
+        String fruitJson = mapper.writeValueAsString(fruitRequest);
 
-        mockMvc.perform(post("/fruits")
+        mockMvc.perform(put("/fruits/{id}",1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(fruitJson))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.name").value("Taronja"))
-                .andExpect(jsonPath("$.weightInKilos").value(2));
+                .andExpect(jsonPath("$.weightInKilos").value(11));
     }
 }
 

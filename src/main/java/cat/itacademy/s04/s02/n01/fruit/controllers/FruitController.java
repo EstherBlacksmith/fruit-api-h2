@@ -54,7 +54,7 @@ public class FruitController {
 
     }
 
-    @PutMapping("/fruits")
+    @PutMapping("/fruits/{id}")
     public ResponseEntity<FruitResponse> updateFruit(
             @PathVariable Long id,
             @Valid @RequestBody FruitRequest fruitRequest) {
@@ -66,8 +66,6 @@ public class FruitController {
                 .body(fruitResponse);
     }
 
-
-    //TODO: PUT	/fruits/{id}	Actualitzar fruita
     //TODO: DELETE	/fruits/{id}	Eliminar per id
 
 

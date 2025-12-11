@@ -45,15 +45,16 @@ public class FruitService {
     }
 
     public FruitResponse update(Long id, @Valid FruitRequest fruitRequest) {
+        Fruit fruit = fruitRepository.findById(id).orElseThrow();
+        fruit.setWeightInKilos(fruitRequest.getWeightInKilos());
+        fruit.setName(fruitRequest.getName());
 
-        FruitResponse fruitResponse = new FruitResponse(fruitRepository.findById(id));
-        Fruit fruit1 = fruitRepository.findBy(fruitResponse.getId())
-        Fruit saved = fruitRepository.saveAndFlush(fruit);
+        Fruit updated = fruitRepository.saveAndFlush(fruit);
 
         return new FruitResponse(
-                saved.getId(),
-                saved.getName(),
-                saved.getWeightInKilos()
+                updated.getId(),
+                updated.getName(),
+                updated.getWeightInKilos()
         );
 
     }
