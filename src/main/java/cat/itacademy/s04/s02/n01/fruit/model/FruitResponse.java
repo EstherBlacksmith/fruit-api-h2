@@ -10,7 +10,7 @@ public class FruitResponse {
     private int weightInKilos;
 
 
-    public FruitResponse(Long id,String name, int weightInKilos) {
+    public FruitResponse(Long id, String name, int weightInKilos) {
         this.name = name;
         this.weightInKilos = weightInKilos;
     }
