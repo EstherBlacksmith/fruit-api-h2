@@ -13,6 +13,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -85,7 +88,6 @@ class FruitControllerTest {
 
     @Test
     void createFruit_returnsErrorIfFruitItsNotFound() throws Exception {
-
         when(fruitService.get(2L))
                 .thenThrow(new FruitNotFoundException("Fruit doesn't exist"));
 
@@ -94,6 +96,36 @@ class FruitControllerTest {
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string("Fruit doesn't exist"));
 
+    }
+
+    @Test
+    void getFruits_returnsListIfAreFruitsInThInventoryANdhTTP200() throws Exception {
+        FruitRequest fruitRequest = new FruitRequest();
+        fruitRequest.setName("Poma");
+        fruitRequest.setWeightInKilos(1);
+
+        Fruit fruit = new Fruit(fruitRequest);
+        List<Fruit> listFruit = new ArrayList<>();
+        listFruit.add(fruit);
+
+        when(fruitService.getAll()).thenReturn(listFruit);
+
+        mockMvc.perform(get("/fruits"))
+                .andExpect(status().isOk())
+                .andExpect(result -> listFruit.contains(fruit));
+
+    }
+
+    @Test
+    void getFruits_returnsEmptyListIfArentFruitsInThInventoryANdhTTP200() throws Exception {
+
+        List<Fruit> listFruit = new ArrayList<>();
+
+        when(fruitService.getAll()).thenReturn(listFruit);
+
+        mockMvc.perform(get("/fruits"))
+                .andExpect(status().isOk())
+                .andExpect(result -> listFruit.isEmpty());
     }
 }
 

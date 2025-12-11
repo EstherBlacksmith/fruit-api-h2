@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/fruits")
+@RequestMapping()
 public class FruitController {
 
     private final FruitService fruitService;
@@ -21,7 +21,17 @@ public class FruitController {
         this.fruitService = fruitService;
     }
 
-    @PostMapping
+    @GetMapping("/fruits")
+    public ResponseEntity<List<Fruit>>  getFruits() {
+
+        List<Fruit> listFruit= fruitService.getAll();
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(listFruit);
+    }
+
+    @PostMapping("/fruits")
     public ResponseEntity<FruitResponse> createFruit(
             @Valid @RequestBody FruitRequest fruitRequest) {
 
@@ -32,8 +42,7 @@ public class FruitController {
                 .body(fruitResponse);
     }
 
-
-    @GetMapping("/{id}")
+    @GetMapping("/fruits/{id}")
     public ResponseEntity<Fruit> getFruit(@PathVariable Long id) {
 
         Fruit fruitResponse = fruitService.get(id);
@@ -45,15 +54,7 @@ public class FruitController {
 
     }
 
-    @GetMapping("/")
-    public ResponseEntity<List<Fruit>>  getFruits() {
 
-        List<Fruit> listFruit= fruitService.getAll();
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(listFruit);
-    }
 
     //TODO: PUT	/fruits/{id}	Actualitzar fruita
     //TODO: DELETE	/fruits/{id}	Eliminar per id
