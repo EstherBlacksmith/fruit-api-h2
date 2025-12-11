@@ -54,6 +54,17 @@ public class FruitController {
 
     }
 
+    @PutMapping("/fruits")
+    public ResponseEntity<FruitResponse> updateFruit(
+            @PathVariable Long id,
+            @Valid @RequestBody FruitRequest fruitRequest) {
+
+        FruitResponse fruitResponse = fruitService.update(id,fruitRequest);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(fruitResponse);
+    }
 
 
     //TODO: PUT	/fruits/{id}	Actualitzar fruita

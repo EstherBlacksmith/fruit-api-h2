@@ -4,6 +4,7 @@ import cat.itacademy.s04.s02.n01.fruit.model.Fruit;
 import cat.itacademy.s04.s02.n01.fruit.model.FruitRequest;
 import cat.itacademy.s04.s02.n01.fruit.model.FruitResponse;
 import cat.itacademy.s04.s02.n01.fruit.repository.FruitRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,9 +44,20 @@ public class FruitService {
         return fruitRepository.findAll();
     }
 
-    //TODO: list getALlFruitrs
-    //TODO: GetAFruit
-    //TODO: updateAfruit
+    public FruitResponse update(Long id, @Valid FruitRequest fruitRequest) {
+
+        FruitResponse fruitResponse = new FruitResponse(fruitRepository.findById(id));
+        Fruit fruit1 = fruitRepository.findBy(fruitResponse.getId())
+        Fruit saved = fruitRepository.saveAndFlush(fruit);
+
+        return new FruitResponse(
+                saved.getId(),
+                saved.getName(),
+                saved.getWeightInKilos()
+        );
+
+    }
+
     //TODO: deleteAfruit
 
 }

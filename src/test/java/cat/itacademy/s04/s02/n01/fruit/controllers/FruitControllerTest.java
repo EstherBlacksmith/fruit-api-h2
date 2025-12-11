@@ -126,9 +126,51 @@ class FruitControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(result -> listFruit.isEmpty());
     }
+
+    @Test
+    void updateFruit_returnErrorIfTheFruitDoesNotExists() {
+
+
+    }
+
+    @Test
+    void updateFruit_returnErrorIfTheDataIsNotValid() {
+    }
+
+    @Test
+    void updateFruit_returnOkAndTheUpdatedFruitIfTheDataIsValidAndTheFruitExists() throws Exception {
+
+        FruitRequest fruitRequest = new FruitRequest();
+        fruitRequest.setName("Poma");
+        fruitRequest.setWeightInKilos(1);
+
+        when(fruitService.save(any(fruitRequest.getClass())))
+                .thenReturn(new FruitResponse(1L, "Poma", 1));
+
+        FruitRequest fruitRequest2 = new FruitRequest();
+        fruitRequest.setName("Taronja");
+        fruitRequest.setWeightInKilos(2);
+
+        when(fruitService.update(id, any(fruitRequest.getClass())))
+                .thenReturn(new FruitResponse(1L, "Taronja", 2));
+
+        ObjectMapper mapper = new ObjectMapper();
+        String fruitJson = mapper.writeValueAsString(fruitRequest2);
+
+        mockMvc.perform(post("/fruits")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(fruitJson))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value("Taronja"))
+                .andExpect(jsonPath("$.weightInKilos").value(2));
+    }
 }
 
 
+/*If the data is valid, the system returns HTTP 200 OK with the updated fruit.
 
+If the ID does not exist, it returns HTTP 404 Not Found.
+
+If the data is invalid, it returns HTTP 400 Bad Request.*/
 
 
