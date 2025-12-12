@@ -50,8 +50,6 @@ public class FruitController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(fruitResponse);
-
-
     }
 
     @PutMapping("/fruits/{id}")

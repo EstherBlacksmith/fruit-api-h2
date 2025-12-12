@@ -1,6 +1,7 @@
 package cat.itacademy.s04.s02.n01.fruit.controllers;
 
 import cat.itacademy.s04.s02.n01.fruit.exception.FruitNotFoundException;
+import cat.itacademy.s04.s02.n01.fruit.exception.InvalidFruitRequestException;
 import cat.itacademy.s04.s02.n01.fruit.model.Fruit;
 import cat.itacademy.s04.s02.n01.fruit.model.FruitRequest;
 import cat.itacademy.s04.s02.n01.fruit.model.FruitResponse;
@@ -15,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -38,7 +40,7 @@ class FruitControllerTest {
         fruitRequest.setWeightInKilos(1);
 
         when(fruitService.save(any(fruitRequest.getClass())))
-                .thenReturn(new FruitResponse(eq(1L), "Poma", 1));
+                .thenReturn(new FruitResponse(eq(Long.valueOf(1L)), "Poma", 1));
 
         ObjectMapper mapper = new ObjectMapper();
         String fruitJson = mapper.writeValueAsString(fruitRequest);
@@ -88,7 +90,7 @@ class FruitControllerTest {
 
     @Test
     void createFruit_returnsErrorIfFruitItsNotFound() throws Exception {
-        when(fruitService.get(eq(2L)))
+        when(fruitService.get(eq(Long.valueOf(2L))))
                 .thenThrow(new FruitNotFoundException("Fruit doesn't exist"));
 
         mockMvc.perform(get("/fruits/{id}", 2L))
@@ -128,19 +130,49 @@ class FruitControllerTest {
     }
 
     @Test
-    void updateFruit_returnErrorIfTheFruitDoesNotExists() {
+    void updateFruit_returnErrorIfTheFruitDoesNotExists() throws Exception {
+        when(fruitService.update(eq(Long.valueOf(3L)), any(FruitRequest.class)))
+                .thenThrow(new FruitNotFoundException("Fruit doesn't exist"));
 
+        FruitRequest fruitRequest = new FruitRequest();
+        fruitRequest.setName("Taronja");
+        fruitRequest.setWeightInKilos(11);
+        ObjectMapper mapper = new ObjectMapper();
+
+        String fruitJson = mapper.writeValueAsString(fruitRequest);
+        mockMvc.perform(put("/fruits/{id}", 3L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(fruitJson))
+                .andExpect(status().isNotFound())
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().string("Fruit doesn't exist"));
 
     }
 
     @Test
-    void updateFruit_returnErrorIfTheDataIsNotValid() {
+    void updateFruit_returnErrorIfTheDataIsNotValid() throws Exception {
+        when(fruitService.update(eq(Long.valueOf(3L)), any(FruitRequest.class)))
+                .thenThrow(new InvalidFruitRequestException("The given data are invalids"));
+        FruitRequest fruitRequest = new FruitRequest();
+        fruitRequest.setName("Potatoes$$");
+        fruitRequest.setWeightInKilos(111111);
+        ObjectMapper mapper = new ObjectMapper();
+
+        String fruitJson = mapper.writeValueAsString(fruitRequest);
+
+        mockMvc.perform(put("/fruits/{id}", 3L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(fruitJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().string("The given data are invalids"));
+
     }
 
     @Test
     void updateFruit_returnOkAndTheUpdatedFruitIfTheDataIsValidAndTheFruitExists() throws Exception {
 
-        when(fruitService.update(eq(1L), any(FruitRequest.class)))
+        when(fruitService.update(eq(Long.valueOf(1L)), any(FruitRequest.class)))
                 .thenReturn(new FruitResponse(1L, "Taronja", 11));
 
         FruitRequest fruitRequest = new FruitRequest();
@@ -150,7 +182,7 @@ class FruitControllerTest {
 
         String fruitJson = mapper.writeValueAsString(fruitRequest);
 
-        mockMvc.perform(put("/fruits/{id}",1L)
+        mockMvc.perform(put("/fruits/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(fruitJson))
                 .andExpect(status().isOk())
@@ -159,12 +191,4 @@ class FruitControllerTest {
                 .andExpect(jsonPath("$.weightInKilos").value(11));
     }
 }
-
-
-/*If the data is valid, the system returns HTTP 200 OK with the updated fruit.
-
-If the ID does not exist, it returns HTTP 404 Not Found.
-
-If the data is invalid, it returns HTTP 400 Bad Request.*/
-
 
