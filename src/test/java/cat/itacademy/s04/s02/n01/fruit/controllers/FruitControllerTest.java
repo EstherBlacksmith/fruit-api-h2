@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -189,5 +190,46 @@ class FruitControllerTest {
                 .andExpect(jsonPath("$.name").value("Taronja"))
                 .andExpect(jsonPath("$.weightInKilos").value(11));
     }
+
+    @Test
+    void deleteFruit_returnErrorIfTheFruitDoesNotExists() throws Exception {
+        when(fruitService.delete(1L)).thenThrow(new FruitNotFoundException("Fruit doesn't exist"));
+
+        FruitRequest fruitRequest = new FruitRequest();
+        fruitRequest.setName("Taronja");
+        fruitRequest.setWeightInKilos(11);
+        ObjectMapper mapper = new ObjectMapper();
+
+        String fruitJson = mapper.writeValueAsString(fruitRequest);
+
+        mockMvc.perform(delete("/fruits/{id}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(fruitJson))
+                .andExpect(status().isNotFound())
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().string("Fruit doesn't exist"));
+
+    }
+    @Test
+    void deleteFruit_returnNoContentIfTheFruitIsDeleted() throws Exception {
+        when(fruitService.delete(1L)).thenReturn(HttpStatus.NO_CONTENT);
+
+        FruitRequest fruitRequest = new FruitRequest();
+        fruitRequest.setName("Taronja");
+        fruitRequest.setWeightInKilos(11);
+        ObjectMapper mapper = new ObjectMapper();
+
+        String fruitJson = mapper.writeValueAsString(fruitRequest);
+
+        mockMvc.perform(delete("/fruits/{id}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(fruitJson))
+                .andExpect(status().isNoContent());
+
+    }
 }
 
+
+
+/*Si l’ID existeix, el sistema elimina la fruita i retorna HTTP 204 No Content.
+*/

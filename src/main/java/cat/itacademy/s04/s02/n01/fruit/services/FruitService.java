@@ -6,6 +6,7 @@ import cat.itacademy.s04.s02.n01.fruit.model.FruitResponse;
 import cat.itacademy.s04.s02.n01.fruit.repository.FruitRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -59,6 +60,11 @@ public class FruitService {
 
     }
 
-    //TODO: deleteAfruit
+    public Enum<HttpStatus> delete(Long id) {
+        Fruit fruit = fruitRepository.findById(id).orElseThrow();
+        fruitRepository.delete(fruit);   
+        return HttpStatus.NO_CONTENT;
+        
+    }
 
 }

@@ -64,7 +64,15 @@ public class FruitController {
                 .body(fruitResponse);
     }
 
-    //TODO: DELETE	/fruits/{id}	Eliminar per id
+    @DeleteMapping("/fruits/{id}")
+    public ResponseEntity<Fruit> deleteFruit(
+            @PathVariable Long id) {
 
+        Fruit fruitResponse = fruitService.get(id);
+        fruitService.delete(id);
 
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .body(fruitResponse);
+    }
 }
