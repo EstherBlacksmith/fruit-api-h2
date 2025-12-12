@@ -140,14 +140,14 @@ class FruitControllerTest {
     @Test
     void updateFruit_returnOkAndTheUpdatedFruitIfTheDataIsValidAndTheFruitExists() throws Exception {
 
-        FruitRequest fruitRequest = new FruitRequest();
-        fruitRequest.setName("Taronja");
-        fruitRequest.setWeightInKilos(11);
-
         when(fruitService.update(eq(1L), any(FruitRequest.class)))
                 .thenReturn(new FruitResponse(1L, "Taronja", 11));
 
+        FruitRequest fruitRequest = new FruitRequest();
+        fruitRequest.setName("Taronja");
+        fruitRequest.setWeightInKilos(11);
         ObjectMapper mapper = new ObjectMapper();
+
         String fruitJson = mapper.writeValueAsString(fruitRequest);
 
         mockMvc.perform(put("/fruits/{id}",1L)
