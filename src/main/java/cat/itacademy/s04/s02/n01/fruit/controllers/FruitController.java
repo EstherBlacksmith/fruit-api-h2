@@ -22,9 +22,9 @@ public class FruitController {
     }
 
     @GetMapping("/fruits")
-    public ResponseEntity<List<Fruit>>  getFruits() {
+    public ResponseEntity<List<Fruit>> getFruits() {
 
-        List<Fruit> listFruit= fruitService.getAll();
+        List<Fruit> listFruit = fruitService.getAll();
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -57,7 +57,7 @@ public class FruitController {
             @PathVariable Long id,
             @Valid @RequestBody FruitRequest fruitRequest) {
 
-        FruitResponse fruitResponse = fruitService.update(id,fruitRequest);
+        FruitResponse fruitResponse = fruitService.update(id, fruitRequest);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

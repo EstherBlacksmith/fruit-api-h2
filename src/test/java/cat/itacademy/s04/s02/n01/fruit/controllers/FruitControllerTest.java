@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -141,8 +140,8 @@ class FruitControllerTest {
 
         String fruitJson = mapper.writeValueAsString(fruitRequest);
         mockMvc.perform(put("/fruits/{id}", 3L)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(fruitJson))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(fruitJson))
                 .andExpect(status().isNotFound())
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string("Fruit doesn't exist"));
@@ -161,8 +160,8 @@ class FruitControllerTest {
         String fruitJson = mapper.writeValueAsString(fruitRequest);
 
         mockMvc.perform(put("/fruits/{id}", 3L)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(fruitJson))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(fruitJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string("The given data are invalids"));
