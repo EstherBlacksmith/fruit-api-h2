@@ -14,4 +14,6 @@ public class FruitRequest {
     @Min(value = 1, message = "Kilos must be at least 1")
     private int weightInKilos;
 
+    @NotBlank(message = "Provider is required")
+    private Provider provider;
 }

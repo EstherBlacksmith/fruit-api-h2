@@ -9,11 +9,13 @@ public class FruitResponse {
     private String name;
     @Getter
     private int weightInKilos;
+    @Getter
+    private Provider provider;
 
-
-    public FruitResponse(Long id, String name, int weightInKilos) {
+    public FruitResponse(Long id, String name, int weightInKilos, Provider provider) {
         this.name = name;
         this.weightInKilos = weightInKilos;
+        this.provider = provider;
         this.id = id;
     }
 
