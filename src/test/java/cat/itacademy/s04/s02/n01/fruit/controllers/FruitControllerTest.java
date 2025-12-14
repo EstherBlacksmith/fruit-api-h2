@@ -1,13 +1,20 @@
 package cat.itacademy.s04.s02.n01.fruit.controllers;
 
-import cat.itacademy.s04.s02.n01.fruit.exception.FruitNotFoundException;
-import cat.itacademy.s04.s02.n01.fruit.exception.InvalidFruitRequestException;
-import cat.itacademy.s04.s02.n01.fruit.model.Fruit;
-import cat.itacademy.s04.s02.n01.fruit.model.FruitRequest;
-import cat.itacademy.s04.s02.n01.fruit.model.FruitResponse;
-import cat.itacademy.s04.s02.n01.fruit.services.FruitService;
+import cat.itacademy.s04.s02.n01.fruit.fruit.controller.FruitController;
+import cat.itacademy.s04.s02.n01.fruit.fruit.dto.Fruit;
+import cat.itacademy.s04.s02.n01.fruit.fruit.dto.FruitRequest;
+import cat.itacademy.s04.s02.n01.fruit.fruit.dto.FruitResponse;
+import cat.itacademy.s04.s02.n01.fruit.fruit.exception.FruitNotFoundException;
+import cat.itacademy.s04.s02.n01.fruit.fruit.exception.InvalidFruitRequestException;
+import cat.itacademy.s04.s02.n01.fruit.fruit.service.FruitService;
+import cat.itacademy.s04.s02.n01.fruit.provider.dto.Provider;
+import cat.itacademy.s04.s02.n01.fruit.provider.service.ProviderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,6 +27,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -29,28 +37,47 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class FruitControllerTest {
     @Autowired
     private MockMvc mockMvc;
-
     @MockBean
     private FruitService fruitService;
+    @MockBean
+    private ProviderService providerService;
+
+    private Provider provider;
+
+    @BeforeEach
+    void setUp(){
+        Provider.ProviderRequest providerRequest = new Provider.ProviderRequest();
+        providerRequest.setName("Las Frutas");
+        providerRequest.setCountry("Spain");
+        provider = new Provider(providerRequest.getName(),providerRequest.getCountry());
+        when(providerService.save(any(Provider.ProviderRequest.class)))
+                .thenReturn(new Provider.ProviderResponse(1L,providerRequest.getName(),providerRequest.getCountry()));
+
+    }
 
     @Test
     void createFruit_returnsFruitIfItsAddedCorrectly() throws Exception {
         FruitRequest fruitRequest = new FruitRequest();
         fruitRequest.setName("Poma");
         fruitRequest.setWeightInKilos(1);
+        fruitRequest.setProviderName("Las Frutas");
 
-        when(fruitService.save(any(fruitRequest.getClass())))
-                .thenReturn(new FruitResponse(eq(Long.valueOf(1L)), "Poma", 1));
+        when(fruitService.save(any(fruitRequest.getClass()),eq(provider.getName())))
+                .thenReturn(new FruitResponse(1L, "Poma", 1,"Las Frutas"));
 
         ObjectMapper mapper = new ObjectMapper();
         String fruitJson = mapper.writeValueAsString(fruitRequest);
 
         mockMvc.perform(post("/fruits")
+                        .param("providerName", "Las Frutas")  // required
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(fruitJson))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("Poma"))
                 .andExpect(jsonPath("$.weightInKilos").value(1));
+
+        Mockito.verify(fruitService, times(1))
+                .save(any(FruitRequest.class), eq(provider.getName()));
     }
 
     @Test
@@ -59,8 +86,8 @@ class FruitControllerTest {
         fruitRequest.setName("Poma");
         fruitRequest.setWeightInKilos(0);
 
-        when(fruitService.save(any(fruitRequest.getClass())))
-                .thenReturn(new FruitResponse(1L, "Poma", 0));
+        when(fruitService.save(any(fruitRequest.getClass()),eq(provider.getName())))
+                .thenReturn(new FruitResponse(1L, "Poma", 0,provider.getName()));
 
         ObjectMapper mapper = new ObjectMapper();
         String fruitJson = mapper.writeValueAsString(fruitRequest);
@@ -77,7 +104,7 @@ class FruitControllerTest {
         fruitRequest.setName("Poma");
         fruitRequest.setWeightInKilos(1);
 
-        Fruit fruit = new Fruit(fruitRequest);
+        Fruit fruit = new Fruit(fruitRequest,provider);
         when(fruitService.get(1L)).thenReturn(fruit);
 
         mockMvc.perform(get("/fruits/{id}", 1L))
@@ -106,7 +133,7 @@ class FruitControllerTest {
         fruitRequest.setName("Poma");
         fruitRequest.setWeightInKilos(1);
 
-        Fruit fruit = new Fruit(fruitRequest);
+        Fruit fruit = new Fruit(fruitRequest,provider);
         List<Fruit> listFruit = new ArrayList<>();
         listFruit.add(fruit);
 
@@ -137,6 +164,8 @@ class FruitControllerTest {
         FruitRequest fruitRequest = new FruitRequest();
         fruitRequest.setName("Taronja");
         fruitRequest.setWeightInKilos(11);
+        fruitRequest.setProviderName("Las Frutas");
+
         ObjectMapper mapper = new ObjectMapper();
 
         String fruitJson = mapper.writeValueAsString(fruitRequest);
@@ -156,6 +185,8 @@ class FruitControllerTest {
         FruitRequest fruitRequest = new FruitRequest();
         fruitRequest.setName("Potatoes$$");
         fruitRequest.setWeightInKilos(111111);
+        fruitRequest.setProviderName("Las Frutas");
+
         ObjectMapper mapper = new ObjectMapper();
 
         String fruitJson = mapper.writeValueAsString(fruitRequest);
@@ -173,16 +204,18 @@ class FruitControllerTest {
     void updateFruit_returnOkAndTheUpdatedFruitIfTheDataIsValidAndTheFruitExists() throws Exception {
 
         when(fruitService.update(eq(Long.valueOf(1L)), any(FruitRequest.class)))
-                .thenReturn(new FruitResponse(1L, "Taronja", 11));
+                .thenReturn(new FruitResponse(1L, "Taronja", 11,provider.getName()));
 
         FruitRequest fruitRequest = new FruitRequest();
         fruitRequest.setName("Taronja");
         fruitRequest.setWeightInKilos(11);
+        fruitRequest.setProviderName("Las Frutas");
         ObjectMapper mapper = new ObjectMapper();
 
         String fruitJson = mapper.writeValueAsString(fruitRequest);
 
         mockMvc.perform(put("/fruits/{id}", 1L)
+                        .param("providerName", "Las Frutas")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(fruitJson))
                 .andExpect(status().isOk())
@@ -198,6 +231,8 @@ class FruitControllerTest {
         FruitRequest fruitRequest = new FruitRequest();
         fruitRequest.setName("Taronja");
         fruitRequest.setWeightInKilos(11);
+        fruitRequest.setProviderName("Las Frutas");
+
         ObjectMapper mapper = new ObjectMapper();
 
         String fruitJson = mapper.writeValueAsString(fruitRequest);
@@ -217,6 +252,8 @@ class FruitControllerTest {
         FruitRequest fruitRequest = new FruitRequest();
         fruitRequest.setName("Taronja");
         fruitRequest.setWeightInKilos(11);
+        fruitRequest.setProviderName("Las Frutas");
+
         ObjectMapper mapper = new ObjectMapper();
 
         String fruitJson = mapper.writeValueAsString(fruitRequest);
@@ -228,8 +265,3 @@ class FruitControllerTest {
 
     }
 }
-
-
-
-/*Si l’ID existeix, el sistema elimina la fruita i retorna HTTP 204 No Content.
-*/

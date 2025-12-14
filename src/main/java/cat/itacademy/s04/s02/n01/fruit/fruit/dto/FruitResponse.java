@@ -1,4 +1,4 @@
-package cat.itacademy.s04.s02.n01.fruit.model;
+package cat.itacademy.s04.s02.n01.fruit.fruit.dto;
 
 import lombok.Getter;
 
@@ -9,11 +9,13 @@ public class FruitResponse {
     private String name;
     @Getter
     private int weightInKilos;
+    @Getter
+    private String providerName;
 
-
-    public FruitResponse(Long id, String name, int weightInKilos) {
+    public FruitResponse(Long id, String name, int weightInKilos, String providerName) {
         this.name = name;
         this.weightInKilos = weightInKilos;
+        this.providerName = providerName;
         this.id = id;
     }
 

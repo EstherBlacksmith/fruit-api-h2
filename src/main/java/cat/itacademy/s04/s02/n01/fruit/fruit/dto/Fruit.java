@@ -1,8 +1,7 @@
-package cat.itacademy.s04.s02.n01.fruit.model;
+package cat.itacademy.s04.s02.n01.fruit.fruit.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import cat.itacademy.s04.s02.n01.fruit.provider.dto.Provider;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
@@ -12,7 +11,7 @@ import lombok.Setter;
 @Entity
 public class Fruit {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Setter
     @NotBlank(message = "Name is required")
@@ -20,15 +19,23 @@ public class Fruit {
     @Setter
     @Positive(message = "Kilos must be at least 1")
     private int weightInKilos;
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "provider_id")
+    private Provider provider;
 
-    public Fruit(String name, int weightInKilos) {
+
+    public Fruit(String name, int weightInKilos, Provider provider) {
         this.name = name;
         this.weightInKilos = weightInKilos;
+        this.provider = provider;
     }
 
-    public Fruit(FruitRequest fruitRequest) {
+    public Fruit(FruitRequest fruitRequest, Provider provider) {
         this.name = fruitRequest.getName();
         this.weightInKilos = fruitRequest.getWeightInKilos();
+        this.provider = provider;
+
     }
 
 }

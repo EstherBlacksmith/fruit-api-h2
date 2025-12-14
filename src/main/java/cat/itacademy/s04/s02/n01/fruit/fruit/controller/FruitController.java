@@ -1,9 +1,9 @@
-package cat.itacademy.s04.s02.n01.fruit.controllers;
+package cat.itacademy.s04.s02.n01.fruit.fruit.controller;
 
-import cat.itacademy.s04.s02.n01.fruit.model.Fruit;
-import cat.itacademy.s04.s02.n01.fruit.model.FruitRequest;
-import cat.itacademy.s04.s02.n01.fruit.model.FruitResponse;
-import cat.itacademy.s04.s02.n01.fruit.services.FruitService;
+import cat.itacademy.s04.s02.n01.fruit.fruit.dto.Fruit;
+import cat.itacademy.s04.s02.n01.fruit.fruit.dto.FruitRequest;
+import cat.itacademy.s04.s02.n01.fruit.fruit.dto.FruitResponse;
+import cat.itacademy.s04.s02.n01.fruit.fruit.service.FruitService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,9 +33,9 @@ public class FruitController {
 
     @PostMapping("/fruits")
     public ResponseEntity<FruitResponse> createFruit(
-            @Valid @RequestBody FruitRequest fruitRequest) {
+            @Valid @RequestBody FruitRequest fruitRequest, @RequestParam String providerName) {
 
-        FruitResponse fruitResponse = fruitService.save(fruitRequest);
+        FruitResponse fruitResponse = fruitService.save(fruitRequest, providerName);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
