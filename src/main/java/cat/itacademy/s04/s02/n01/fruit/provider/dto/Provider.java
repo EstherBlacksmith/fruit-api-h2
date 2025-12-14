@@ -12,7 +12,7 @@ import lombok.Setter;
 })
 public class Provider {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Setter
     @NotBlank(message = "Name is required")
