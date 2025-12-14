@@ -49,7 +49,7 @@ public class ProviderServiceTest {
 
 
     @Test
-    void save_thenReturNErrorIdProviderResponseWithIdIfTheNameAreDuplicated() {
+    void save_thenReturnErrorIdProviderResponseWithIdIfTheNameAreDuplicated() {
         ProviderRequest providerRequest = new ProviderRequest();
         Provider provider = new Provider(providerRequest);
 

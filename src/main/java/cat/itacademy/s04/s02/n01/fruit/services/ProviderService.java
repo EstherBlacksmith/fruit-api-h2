@@ -1,5 +1,6 @@
 package cat.itacademy.s04.s02.n01.fruit.services;
 
+import cat.itacademy.s04.s02.n01.fruit.exception.ProviderNotFoundException;
 import cat.itacademy.s04.s02.n01.fruit.model.*;
 import cat.itacademy.s04.s02.n01.fruit.repository.ProviderRepository;
 import jakarta.validation.Valid;
@@ -21,7 +22,7 @@ public class ProviderService {
 
     public ProviderResponse save(@Valid @RequestBody ProviderRequest providerRequest) {
         providerRepository.findByName(providerRequest.getName()).ifPresent(p -> {
-            throw new IllegalArgumentException("Provider with name '" + providerRequest.getName() + "' already exists");
+            throw new ProviderNotFoundException("Provider with name '" + providerRequest.getName() + "' already exists");
         });
         Provider provider = new Provider(
                 providerRequest.getName(),
