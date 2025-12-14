@@ -1,10 +1,8 @@
-package cat.itacademy.s04.s02.n01.fruit.services;
+package cat.itacademy.s04.s02.n01.fruit.provider.service;
 
-import cat.itacademy.s04.s02.n01.fruit.exception.ProviderDuplicateNameException;
-import cat.itacademy.s04.s02.n01.fruit.model.Provider;
-import cat.itacademy.s04.s02.n01.fruit.model.ProviderRequest;
-import cat.itacademy.s04.s02.n01.fruit.model.ProviderResponse;
-import cat.itacademy.s04.s02.n01.fruit.repository.ProviderRepository;
+import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderDuplicateNameException;
+import cat.itacademy.s04.s02.n01.fruit.provider.dto.Provider;
+import cat.itacademy.s04.s02.n01.fruit.provider.repository.ProviderRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +20,7 @@ public class ProviderService {
     }
 
 
-    public ProviderResponse save(@Valid @RequestBody ProviderRequest providerRequest) {
+    public Provider.ProviderResponse save(@Valid @RequestBody Provider.ProviderRequest providerRequest) {
         providerRepository.findByName(providerRequest.getName()).ifPresent(providerToFind -> {
             throw new ProviderDuplicateNameException("Provider with name '" + providerRequest.getName()
                     + "' already exists");
@@ -35,7 +33,7 @@ public class ProviderService {
 
         Provider saved = providerRepository.save(provider);
 
-        return new ProviderResponse(
+        return new Provider.ProviderResponse(
                 saved.getId(),
                 saved.getName(),
                 saved.getCountry()

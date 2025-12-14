@@ -1,5 +1,8 @@
 package cat.itacademy.s04.s02.n01.fruit.exception;
 
+import cat.itacademy.s04.s02.n01.fruit.fruit.exception.FruitNotFoundException;
+import cat.itacademy.s04.s02.n01.fruit.fruit.exception.InvalidFruitRequestException;
+import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderDuplicateNameException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

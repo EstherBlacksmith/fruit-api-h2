@@ -1,10 +1,14 @@
 package cat.itacademy.s04.s02.n01.fruit.controllers;
 
-import cat.itacademy.s04.s02.n01.fruit.exception.FruitNotFoundException;
-import cat.itacademy.s04.s02.n01.fruit.exception.InvalidFruitRequestException;
-import cat.itacademy.s04.s02.n01.fruit.model.*;
-import cat.itacademy.s04.s02.n01.fruit.services.FruitService;
-import cat.itacademy.s04.s02.n01.fruit.services.ProviderService;
+import cat.itacademy.s04.s02.n01.fruit.fruit.controller.FruitController;
+import cat.itacademy.s04.s02.n01.fruit.fruit.dto.Fruit;
+import cat.itacademy.s04.s02.n01.fruit.fruit.dto.FruitRequest;
+import cat.itacademy.s04.s02.n01.fruit.fruit.dto.FruitResponse;
+import cat.itacademy.s04.s02.n01.fruit.fruit.exception.FruitNotFoundException;
+import cat.itacademy.s04.s02.n01.fruit.fruit.exception.InvalidFruitRequestException;
+import cat.itacademy.s04.s02.n01.fruit.fruit.service.FruitService;
+import cat.itacademy.s04.s02.n01.fruit.provider.dto.Provider;
+import cat.itacademy.s04.s02.n01.fruit.provider.service.ProviderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -42,12 +46,12 @@ class FruitControllerTest {
 
     @BeforeEach
     void setUp(){
-        ProviderRequest providerRequest = new ProviderRequest();
+        Provider.ProviderRequest providerRequest = new Provider.ProviderRequest();
         providerRequest.setName("Las Frutas");
         providerRequest.setCountry("Spain");
         provider = new Provider(providerRequest.getName(),providerRequest.getCountry());
-        when(providerService.save(any(ProviderRequest.class)))
-                .thenReturn(new ProviderResponse(1L,providerRequest.getName(),providerRequest.getCountry()));
+        when(providerService.save(any(Provider.ProviderRequest.class)))
+                .thenReturn(new Provider.ProviderResponse(1L,providerRequest.getName(),providerRequest.getCountry()));
 
     }
 

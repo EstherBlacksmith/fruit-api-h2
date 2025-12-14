@@ -1,6 +1,6 @@
-package cat.itacademy.s04.s02.n01.fruit.repository;
+package cat.itacademy.s04.s02.n01.fruit.provider.repository;
 
-import cat.itacademy.s04.s02.n01.fruit.model.Provider;
+import cat.itacademy.s04.s02.n01.fruit.provider.dto.Provider;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

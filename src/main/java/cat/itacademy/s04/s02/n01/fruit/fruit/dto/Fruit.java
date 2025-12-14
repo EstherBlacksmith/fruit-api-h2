@@ -1,5 +1,6 @@
-package cat.itacademy.s04.s02.n01.fruit.model;
+package cat.itacademy.s04.s02.n01.fruit.fruit.dto;
 
+import cat.itacademy.s04.s02.n01.fruit.provider.dto.Provider;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
@@ -10,7 +11,7 @@ import lombok.Setter;
 @Entity
 public class Fruit {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Setter
     @NotBlank(message = "Name is required")

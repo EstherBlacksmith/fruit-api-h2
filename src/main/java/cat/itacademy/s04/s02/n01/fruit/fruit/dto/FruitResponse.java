@@ -1,4 +1,4 @@
-package cat.itacademy.s04.s02.n01.fruit.model;
+package cat.itacademy.s04.s02.n01.fruit.fruit.dto;
 
 import lombok.Getter;
 
