@@ -20,6 +20,9 @@ public class ProviderService {
 
 
     public ProviderResponse save(@Valid @RequestBody ProviderRequest providerRequest) {
+        providerRepository.findByName(providerRequest.getName()).ifPresent(p -> {
+            throw new IllegalArgumentException("Provider with name '" + providerRequest.getName() + "' already exists");
+        });
         Provider provider = new Provider(
                 providerRequest.getName(),
                 providerRequest.getCountry()

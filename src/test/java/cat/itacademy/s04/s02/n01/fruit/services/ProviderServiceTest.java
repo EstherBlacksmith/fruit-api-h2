@@ -44,8 +44,25 @@ public class ProviderServiceTest {
         assertNotNull(providerSaved);
 
         Mockito.verify(providerRepository, times(1)).save(any(Provider.class));
+    }
 
 
+
+    @Test
+    void save_thenReturNErrorIdProviderResponseWithIdIfTheNameAreDuplicated() {
+        ProviderRequest providerRequest = new ProviderRequest();
+        Provider provider = new Provider(providerRequest);
+
+        when(providerRepository.save(any(Provider.class))).thenReturn(provider);
+
+        providerRequest.setName("Frutas SL");
+        providerRequest.setCountry("Spain");
+
+        ProviderResponse providerSaved = providerService.save(providerRequest);
+
+        assertNotNull(providerSaved);
+
+        Mockito.verify(providerRepository, times(1)).save(any(Provider.class));
     }
 
 }

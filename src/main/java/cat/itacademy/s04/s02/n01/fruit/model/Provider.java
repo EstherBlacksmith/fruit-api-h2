@@ -1,14 +1,15 @@
 package cat.itacademy.s04.s02.n01.fruit.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Entity
+@Table(name = "providers", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "name")
+})
 public class Provider {
     @Id
     @GeneratedValue
