@@ -4,17 +4,22 @@ import cat.itacademy.s04.s02.n01.fruit.model.*;
 import cat.itacademy.s04.s02.n01.fruit.repository.ProviderRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 
+@Service
+@Validated
 public class ProviderService {
     @Autowired
     private ProviderRepository providerRepository;
 
-    public ProviderService(ProviderRepository providerRepository) {
+    public ProviderService(@Valid ProviderRepository providerRepository) {
         this.providerRepository = providerRepository;
     }
 
 
-    public ProviderResponse save(ProviderRequest providerRequest) {
+    public ProviderResponse save(@Valid @RequestBody ProviderRequest providerRequest) {
         Provider provider = new Provider(
                 providerRequest.getName(),
                 providerRequest.getCountry()

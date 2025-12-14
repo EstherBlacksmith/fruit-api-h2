@@ -4,9 +4,13 @@ import cat.itacademy.s04.s02.n01.fruit.exception.FruitNotFoundException;
 import cat.itacademy.s04.s02.n01.fruit.exception.InvalidFruitRequestException;
 import cat.itacademy.s04.s02.n01.fruit.model.*;
 import cat.itacademy.s04.s02.n01.fruit.services.FruitService;
+import cat.itacademy.s04.s02.n01.fruit.services.ProviderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeAll;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,6 +23,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -28,18 +33,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class FruitControllerTest {
     @Autowired
     private MockMvc mockMvc;
-
     @MockBean
     private FruitService fruitService;
+    @MockBean
+    private ProviderService providerService;
 
-    static Provider provider;
-    @BeforeAll
-    static void createProvider(){
+    private Provider provider;
+
+    @BeforeEach
+    void setUp(){
         ProviderRequest providerRequest = new ProviderRequest();
         providerRequest.setName("Las Frutas");
         providerRequest.setCountry("Spain");
+        provider = new Provider(providerRequest.getName(),providerRequest.getCountry());
+        when(providerService.save(any(ProviderRequest.class)))
+                .thenReturn(new ProviderResponse(1L,providerRequest.getName(),providerRequest.getCountry()));
 
-        provider = new Provider(providerRequest);
     }
 
     @Test
@@ -47,19 +56,24 @@ class FruitControllerTest {
         FruitRequest fruitRequest = new FruitRequest();
         fruitRequest.setName("Poma");
         fruitRequest.setWeightInKilos(1);
+        fruitRequest.setProviderName("Las Frutas");
 
-        when(fruitService.save(any(fruitRequest.getClass()),provider.getName()))
-                .thenReturn(new FruitResponse(eq(Long.valueOf(1L)), "Poma", 1,provider));
+        when(fruitService.save(any(fruitRequest.getClass()),eq(provider.getName())))
+                .thenReturn(new FruitResponse(1L, "Poma", 1,"Las Frutas"));
 
         ObjectMapper mapper = new ObjectMapper();
         String fruitJson = mapper.writeValueAsString(fruitRequest);
 
         mockMvc.perform(post("/fruits")
+                        .param("providerName", "Las Frutas")  // required
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(fruitJson))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("Poma"))
                 .andExpect(jsonPath("$.weightInKilos").value(1));
+
+        Mockito.verify(fruitService, times(1))
+                .save(any(FruitRequest.class), eq(provider.getName()));
     }
 
     @Test
@@ -68,8 +82,8 @@ class FruitControllerTest {
         fruitRequest.setName("Poma");
         fruitRequest.setWeightInKilos(0);
 
-        when(fruitService.save(any(fruitRequest.getClass()),provider.getName()))
-                .thenReturn(new FruitResponse(1L, "Poma", 0,provider));
+        when(fruitService.save(any(fruitRequest.getClass()),eq(provider.getName())))
+                .thenReturn(new FruitResponse(1L, "Poma", 0,provider.getName()));
 
         ObjectMapper mapper = new ObjectMapper();
         String fruitJson = mapper.writeValueAsString(fruitRequest);
@@ -146,6 +160,8 @@ class FruitControllerTest {
         FruitRequest fruitRequest = new FruitRequest();
         fruitRequest.setName("Taronja");
         fruitRequest.setWeightInKilos(11);
+        fruitRequest.setProviderName("Las Frutas");
+
         ObjectMapper mapper = new ObjectMapper();
 
         String fruitJson = mapper.writeValueAsString(fruitRequest);
@@ -165,6 +181,8 @@ class FruitControllerTest {
         FruitRequest fruitRequest = new FruitRequest();
         fruitRequest.setName("Potatoes$$");
         fruitRequest.setWeightInKilos(111111);
+        fruitRequest.setProviderName("Las Frutas");
+
         ObjectMapper mapper = new ObjectMapper();
 
         String fruitJson = mapper.writeValueAsString(fruitRequest);
@@ -182,16 +200,18 @@ class FruitControllerTest {
     void updateFruit_returnOkAndTheUpdatedFruitIfTheDataIsValidAndTheFruitExists() throws Exception {
 
         when(fruitService.update(eq(Long.valueOf(1L)), any(FruitRequest.class)))
-                .thenReturn(new FruitResponse(1L, "Taronja", 11,provider));
+                .thenReturn(new FruitResponse(1L, "Taronja", 11,provider.getName()));
 
         FruitRequest fruitRequest = new FruitRequest();
         fruitRequest.setName("Taronja");
         fruitRequest.setWeightInKilos(11);
+        fruitRequest.setProviderName("Las Frutas");
         ObjectMapper mapper = new ObjectMapper();
 
         String fruitJson = mapper.writeValueAsString(fruitRequest);
 
         mockMvc.perform(put("/fruits/{id}", 1L)
+                        .param("providerName", "Las Frutas")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(fruitJson))
                 .andExpect(status().isOk())
@@ -207,6 +227,8 @@ class FruitControllerTest {
         FruitRequest fruitRequest = new FruitRequest();
         fruitRequest.setName("Taronja");
         fruitRequest.setWeightInKilos(11);
+        fruitRequest.setProviderName("Las Frutas");
+
         ObjectMapper mapper = new ObjectMapper();
 
         String fruitJson = mapper.writeValueAsString(fruitRequest);
@@ -226,6 +248,8 @@ class FruitControllerTest {
         FruitRequest fruitRequest = new FruitRequest();
         fruitRequest.setName("Taronja");
         fruitRequest.setWeightInKilos(11);
+        fruitRequest.setProviderName("Las Frutas");
+
         ObjectMapper mapper = new ObjectMapper();
 
         String fruitJson = mapper.writeValueAsString(fruitRequest);

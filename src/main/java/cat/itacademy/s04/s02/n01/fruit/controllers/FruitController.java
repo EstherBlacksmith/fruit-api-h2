@@ -33,9 +33,9 @@ public class FruitController {
 
     @PostMapping("/fruits")
     public ResponseEntity<FruitResponse> createFruit(
-            @Valid @RequestBody FruitRequest fruitRequest, String provider) {
+            @Valid @RequestBody FruitRequest fruitRequest, @RequestParam String providerName) {
 
-        FruitResponse fruitResponse = fruitService.save(fruitRequest,provider);
+        FruitResponse fruitResponse = fruitService.save(fruitRequest,providerName);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)

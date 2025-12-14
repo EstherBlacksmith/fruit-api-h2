@@ -4,10 +4,9 @@ package cat.itacademy.s04.s02.n01.fruit.controllers;
 import cat.itacademy.s04.s02.n01.fruit.model.ProviderRequest;
 import cat.itacademy.s04.s02.n01.fruit.model.ProviderResponse;
 import cat.itacademy.s04.s02.n01.fruit.services.ProviderService;
-import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +21,7 @@ public class ProviderController {
     //TODO POST	/providers	Crear proveïdor
     @RequestMapping("/provider")
     public ResponseEntity<ProviderResponse> createProvider(
-            @Valid @RequestBody ProviderRequest providerRequest){
+        ProviderRequest providerRequest){
 
         ProviderResponse  providerResponse  = providerService.save(providerRequest);
 

@@ -22,7 +22,6 @@ public class Fruit {
     @Setter
     @ManyToOne
     @JoinColumn(name = "provider_id")
-    @NotBlank(message = "Name is required")
     private Provider provider;
 
 
