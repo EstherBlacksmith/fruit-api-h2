@@ -1,7 +1,10 @@
 package cat.itacademy.s04.s02.n01.fruit.services;
 
 import cat.itacademy.s04.s02.n01.fruit.exception.ProviderNotFoundException;
-import cat.itacademy.s04.s02.n01.fruit.model.*;
+import cat.itacademy.s04.s02.n01.fruit.model.Fruit;
+import cat.itacademy.s04.s02.n01.fruit.model.FruitRequest;
+import cat.itacademy.s04.s02.n01.fruit.model.FruitResponse;
+import cat.itacademy.s04.s02.n01.fruit.model.Provider;
 import cat.itacademy.s04.s02.n01.fruit.repository.FruitRepository;
 import cat.itacademy.s04.s02.n01.fruit.repository.ProviderRepository;
 import jakarta.validation.Valid;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
+
 @Validated
 @Service
 public class FruitService {
@@ -24,7 +28,7 @@ public class FruitService {
         this.providerRepository = providerRepository;
     }
 
-    public FruitResponse save(FruitRequest fruitRequest,String providerName) {
+    public FruitResponse save(FruitRequest fruitRequest, String providerName) {
         Provider provider = providerRepository.findByName(providerName).orElseThrow(() -> new ProviderNotFoundException("Provider not found: " + providerName));
 
         Fruit fruit = new Fruit(
@@ -77,9 +81,9 @@ public class FruitService {
 
     public Enum<HttpStatus> delete(Long id) {
         Fruit fruit = fruitRepository.findById(id).orElseThrow();
-        fruitRepository.delete(fruit);   
+        fruitRepository.delete(fruit);
         return HttpStatus.NO_CONTENT;
-        
+
     }
 
 }

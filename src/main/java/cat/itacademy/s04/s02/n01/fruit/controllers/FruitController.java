@@ -35,7 +35,7 @@ public class FruitController {
     public ResponseEntity<FruitResponse> createFruit(
             @Valid @RequestBody FruitRequest fruitRequest, @RequestParam String providerName) {
 
-        FruitResponse fruitResponse = fruitService.save(fruitRequest,providerName);
+        FruitResponse fruitResponse = fruitService.save(fruitRequest, providerName);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)

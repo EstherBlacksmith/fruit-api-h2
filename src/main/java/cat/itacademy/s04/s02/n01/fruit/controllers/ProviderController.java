@@ -4,7 +4,6 @@ package cat.itacademy.s04.s02.n01.fruit.controllers;
 import cat.itacademy.s04.s02.n01.fruit.model.ProviderRequest;
 import cat.itacademy.s04.s02.n01.fruit.model.ProviderResponse;
 import cat.itacademy.s04.s02.n01.fruit.services.ProviderService;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,9 +20,9 @@ public class ProviderController {
     //TODO POST	/providers	Crear proveïdor
     @RequestMapping("/provider")
     public ResponseEntity<ProviderResponse> createProvider(
-        ProviderRequest providerRequest){
+            ProviderRequest providerRequest) {
 
-        ProviderResponse  providerResponse  = providerService.save(providerRequest);
+        ProviderResponse providerResponse = providerService.save(providerRequest);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)

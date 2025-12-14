@@ -1,34 +1,15 @@
 package cat.itacademy.s04.s02.n01.fruit.controllers;
 
-import cat.itacademy.s04.s02.n01.fruit.model.FruitRequest;
-import cat.itacademy.s04.s02.n01.fruit.model.Provider;
-import cat.itacademy.s04.s02.n01.fruit.model.ProviderRequest;
-import cat.itacademy.s04.s02.n01.fruit.model.ProviderResponse;
 import cat.itacademy.s04.s02.n01.fruit.repository.ProviderRepository;
-import cat.itacademy.s04.s02.n01.fruit.services.ProviderService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.MediaType;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest
 @Testcontainers
@@ -67,4 +48,4 @@ class ProviderControllerTest {
         }, "S'esperava una excepció de MySQL perquè el camp 'nom' és NOT NULL.");*/
     }
 
-    }
+}

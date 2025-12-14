@@ -1,7 +1,6 @@
 package cat.itacademy.s04.s02.n01.fruit.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
@@ -25,13 +24,13 @@ public class Fruit {
     private Provider provider;
 
 
-    public Fruit(String name, int weightInKilos,Provider provider) {
+    public Fruit(String name, int weightInKilos, Provider provider) {
         this.name = name;
         this.weightInKilos = weightInKilos;
         this.provider = provider;
     }
 
-    public Fruit(FruitRequest fruitRequest,Provider provider) {
+    public Fruit(FruitRequest fruitRequest, Provider provider) {
         this.name = fruitRequest.getName();
         this.weightInKilos = fruitRequest.getWeightInKilos();
         this.provider = provider;

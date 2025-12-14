@@ -12,7 +12,7 @@ public class FruitResponse {
     @Getter
     private String providerName;
 
-    public FruitResponse(Long id, String name, int weightInKilos, String  providerName) {
+    public FruitResponse(Long id, String name, int weightInKilos, String providerName) {
         this.name = name;
         this.weightInKilos = weightInKilos;
         this.providerName = providerName;
