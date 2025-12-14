@@ -34,4 +34,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
+    @ExceptionHandler(ProviderDuplicateNameException.class)
+    public ResponseEntity<String> handleProviderExists(ProviderDuplicateNameException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
 }
