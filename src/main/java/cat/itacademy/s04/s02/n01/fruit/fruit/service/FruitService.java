@@ -1,5 +1,6 @@
 package cat.itacademy.s04.s02.n01.fruit.fruit.service;
 
+import cat.itacademy.s04.s02.n01.fruit.fruit.exception.FruitNotFoundException;
 import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderNotFoundException;
 import cat.itacademy.s04.s02.n01.fruit.fruit.dto.Fruit;
 import cat.itacademy.s04.s02.n01.fruit.fruit.dto.FruitRequest;
@@ -50,7 +51,7 @@ public class FruitService {
 
     public Fruit get(Long id) {
         return fruitRepository.findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new FruitNotFoundException("Fruit doesn't exists"));
     }
 
     public List<Fruit> getAll() {
@@ -58,7 +59,7 @@ public class FruitService {
     }
 
     public FruitResponse update(Long id, @Valid FruitRequest fruitRequest) {
-        Fruit fruit = fruitRepository.findById(id).orElseThrow();
+        Fruit fruit = fruitRepository.findById(id).orElseThrow(() -> new FruitNotFoundException("Fruit doesn't exists"));
 
         fruit.setWeightInKilos(fruitRequest.getWeightInKilos());
         fruit.setName(fruitRequest.getName());
@@ -80,7 +81,7 @@ public class FruitService {
     }
 
     public Enum<HttpStatus> delete(Long id) {
-        Fruit fruit = fruitRepository.findById(id).orElseThrow();
+        Fruit fruit = fruitRepository.findById(id).orElseThrow(() -> new FruitNotFoundException("Fruit doesn't exists"));
         fruitRepository.delete(fruit);
         return HttpStatus.NO_CONTENT;
 

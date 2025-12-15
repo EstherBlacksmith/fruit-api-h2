@@ -1,6 +1,7 @@
 package cat.itacademy.s04.s02.n01.fruit.repository;
 
 import cat.itacademy.s04.s02.n01.fruit.fruit.dto.Fruit;
+import cat.itacademy.s04.s02.n01.fruit.fruit.exception.FruitNotFoundException;
 import cat.itacademy.s04.s02.n01.fruit.fruit.repository.FruitRepository;
 import cat.itacademy.s04.s02.n01.fruit.provider.dto.Provider;
 import cat.itacademy.s04.s02.n01.fruit.provider.repository.ProviderRepository;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 class FruitRepositoryTest {
@@ -74,7 +76,25 @@ class FruitRepositoryTest {
         fruitRepository.save(fruit2);
 
         Assertions.assertNotNull(fruitRepository.findAll(), "The list is not null");
-        Assertions.assertTrue(fruitRepository.findAll().contains(fruit1));
-        Assertions.assertTrue(fruitRepository.findAll().contains(fruit2));
+        assertTrue(fruitRepository.findAll().contains(fruit1));
+        assertTrue(fruitRepository.findAll().contains(fruit2));
+    }
+
+
+    @Test()
+    @DisplayName("Test must return a empty if the given id doesn't exists")
+    void save_testMustReturnEmptyIfTheIdDoesNotExists() {
+        assertTrue(fruitRepository.findById(4L).isEmpty());
+    }
+
+    @Test()
+    @DisplayName("Test must return a the details of the fruit")
+    void save_testMustReturnTheDetailsOfTheFruit() {
+        Fruit fruit1 = new Fruit("Pera", 12, provider);
+
+        fruitRepository.save(fruit1);
+
+        assertTrue(fruitRepository.findById(fruit1.getId()).stream()
+                .anyMatch(fruit -> fruit.getName().equals("Pera")));
     }
 }
