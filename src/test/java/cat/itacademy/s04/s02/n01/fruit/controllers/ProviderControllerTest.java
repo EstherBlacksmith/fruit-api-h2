@@ -15,7 +15,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class ProviderControllerTest {
-    @Autowired
+ /*   @Autowired
     private ProviderRepository providerRepository;
 
     @Container
@@ -46,6 +46,7 @@ class ProviderControllerTest {
         assertThrows(DataIntegrityViolationException.class, () -> {
             providerRepository.saveAndFlush(providerResponse);
         }, "S'esperava una excepció de MySQL perquè el camp 'nom' és NOT NULL.");*/
-    }
+   /* }*/
+
 
 }

@@ -21,6 +21,9 @@ public class Provider {
     @NotBlank(message = "Country is required")
     private String country;
 
+    public Provider() {
+    }
+
     public Provider(String name, String country) {
         this.name = name;
         this.country = country;

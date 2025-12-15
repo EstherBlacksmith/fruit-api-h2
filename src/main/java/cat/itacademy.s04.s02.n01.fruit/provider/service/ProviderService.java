@@ -1,7 +1,7 @@
 package cat.itacademy.s04.s02.n01.fruit.provider.service;
 
-import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderDuplicateNameException;
 import cat.itacademy.s04.s02.n01.fruit.provider.dto.Provider;
+import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderDuplicateNameException;
 import cat.itacademy.s04.s02.n01.fruit.provider.repository.ProviderRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

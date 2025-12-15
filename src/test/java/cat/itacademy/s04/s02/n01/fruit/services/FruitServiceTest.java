@@ -21,7 +21,6 @@ import org.mockito.quality.Strictness;
 
 import java.util.Optional;
 
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;

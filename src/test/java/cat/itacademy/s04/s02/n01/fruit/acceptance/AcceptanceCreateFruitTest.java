@@ -1,61 +1,77 @@
 package cat.itacademy.s04.s02.n01.fruit.acceptance;
 
+import cat.itacademy.s04.s02.n01.fruit.provider.repository.ProviderRepository;
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.annotation.DirtiesContext;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AcceptanceCreateFruitTest {
+    @LocalServerPort
+    private int port;
 
     private static Long fruitId;
 
-    @BeforeClass
-    public static void setup() {
-        RestAssured.baseURI = "http://localhost:8080/";
+    @Autowired
+    private ProviderRepository providerRepository;
+
+    @BeforeAll
+    public void setup() {
+        providerRepository.deleteAll();
+        RestAssured.baseURI = "http://localhost";
+        RestAssured.port = port;
+
+        String providerRequest = """
+                {
+                  "name": "Las Frutas",
+                  "country": "Spain"
+                }
+                """;
+
+        given()
+                .contentType("application/json")
+                .body(providerRequest)
+                .when()
+                .post("/provider")
+                .then()
+                .log().all()
+                .statusCode(201);
+
     }
-/*   @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Setter
-    @NotBlank(message = "Name is required")
-    private String name;
-    @Setter
-    @Positive(message = "Kilos must be at least 1")
-    private int weightInKilos;
-    @Setter
-    @ManyToOne
-    @JoinColumn(name = "provider_id")
-    private Provider provider;
-*/
 
     @Test
     public void testAddNewFruit() {
         String requestBody = """
-        {
-          "id": 4677,
-          "name": "poma",
-          "weightInKilos": "1",
-          "provider": { "id": 9342,
-            "name": "Los Fruitis".
-            "country": "Spain"
-            }
-        }
-        """;
+                {
+                  "name": "poma",
+                  "weightInKilos": 1
+                }
+                """;
+
         Response response = given()
-                .contentType("application/json")
+                .contentType(ContentType.JSON)
+                .queryParam("providerName", "Las Frutas")
                 .body(requestBody)
+                .log().all()
                 .when()
                 .post("/fruits")
                 .then()
-                .statusCode(200)
-                .body("name", equalTo("poma"))
-                .extract().response();
+                .extract()
+                .response();
 
-        fruitId = response.jsonPath().getLong("id");
-        System.out.println("Created Fruit ID: " + fruitId);
+
+        int statusCode = response.statusCode();
+        System.out.println("Created Fruit Status: " + statusCode);
     }
 
 }

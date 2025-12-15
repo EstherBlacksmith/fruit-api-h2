@@ -69,7 +69,7 @@ class FruitControllerTest {
         String fruitJson = mapper.writeValueAsString(fruitRequest);
 
         mockMvc.perform(post("/fruits")
-                        .param("providerName", "Las Frutas")  // required
+                        .param("providerName", "Las Frutas")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(fruitJson))
                 .andExpect(status().isCreated())

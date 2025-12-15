@@ -1,12 +1,12 @@
 package cat.itacademy.s04.s02.n01.fruit.fruit.service;
 
-import cat.itacademy.s04.s02.n01.fruit.fruit.exception.FruitNotFoundException;
-import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderNotFoundException;
 import cat.itacademy.s04.s02.n01.fruit.fruit.dto.Fruit;
 import cat.itacademy.s04.s02.n01.fruit.fruit.dto.FruitRequest;
 import cat.itacademy.s04.s02.n01.fruit.fruit.dto.FruitResponse;
-import cat.itacademy.s04.s02.n01.fruit.provider.dto.Provider;
+import cat.itacademy.s04.s02.n01.fruit.fruit.exception.FruitNotFoundException;
 import cat.itacademy.s04.s02.n01.fruit.fruit.repository.FruitRepository;
+import cat.itacademy.s04.s02.n01.fruit.provider.dto.Provider;
+import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderNotFoundException;
 import cat.itacademy.s04.s02.n01.fruit.provider.repository.ProviderRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
