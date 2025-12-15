@@ -65,7 +65,7 @@ public class FruitService {
         fruit.setName(fruitRequest.getName());
 
         Provider provider = providerRepository.findByName(fruitRequest.getProviderName())
-                .orElseThrow();
+                .orElseThrow(() -> new ProviderNotFoundException("Provider not found: " + fruitRequest.getProviderName()));
 
         fruit.setProvider(provider);
 

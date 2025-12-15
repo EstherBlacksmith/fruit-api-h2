@@ -13,8 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class FruitRepositoryTest {
@@ -63,13 +62,13 @@ class FruitRepositoryTest {
 
     @Test()
     @DisplayName("Test must return empty list if there are no fruits")
-    void save_testMustReturnEmptyListOfFruits() {
+    void findAll_testMustReturnEmptyListOfFruits() {
         Assertions.assertNotNull(fruitRepository.findAll(), "The list is not null");
     }
 
     @Test()
     @DisplayName("Test must return a list of fruits")
-    void save_testMustReturnListOfFruits() {
+    void findAll_testMustReturnListOfFruits() {
         Fruit fruit1 = new Fruit("Pera", 12, provider);
         Fruit fruit2 = new Fruit("Poma", 2, provider);
         fruitRepository.save(fruit1);
@@ -83,13 +82,13 @@ class FruitRepositoryTest {
 
     @Test()
     @DisplayName("Test must return a empty if the given id doesn't exists")
-    void save_testMustReturnEmptyIfTheIdDoesNotExists() {
+    void findById_testMustReturnEmptyIfTheIdDoesNotExists() {
         assertTrue(fruitRepository.findById(4L).isEmpty());
     }
 
     @Test()
     @DisplayName("Test must return a the details of the fruit")
-    void save_testMustReturnTheDetailsOfTheFruit() {
+    void findById_testMustReturnTheDetailsOfTheFruit() {
         Fruit fruit1 = new Fruit("Pera", 12, provider);
 
         fruitRepository.save(fruit1);
@@ -97,4 +96,23 @@ class FruitRepositoryTest {
         assertTrue(fruitRepository.findById(fruit1.getId()).stream()
                 .anyMatch(fruit -> fruit.getName().equals("Pera")));
     }
+
+    @Test()
+    @DisplayName("Test must return a the details of the fruit")
+    void update_testMustReturnTheUpdatedFruit() {
+        Fruit fruit1 = new Fruit("Pera", 12, provider);
+        fruitRepository.save(fruit1);
+        fruit1.setName("Poma");
+        fruit1.setWeightInKilos(2);
+        fruitRepository.saveAndFlush(fruit1);
+
+        assertTrue(fruitRepository.findById(fruit1.getId()).stream()
+                .anyMatch(fruit -> fruit.getName().equals("Poma")));
+    }
+
 }
+/*If the data is valid, the system returns HTTP 200 OK with the updated fruit.
+
+If the ID does not exist, it returns HTTP 404 Not Found.
+
+If the data is invalid, it returns HTTP 400 Bad Request.*/
