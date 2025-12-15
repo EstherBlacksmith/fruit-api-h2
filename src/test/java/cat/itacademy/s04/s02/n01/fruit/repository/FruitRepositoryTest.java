@@ -4,6 +4,7 @@ import cat.itacademy.s04.s02.n01.fruit.fruit.dto.Fruit;
 import cat.itacademy.s04.s02.n01.fruit.fruit.exception.InvalidFruitRequestException;
 import cat.itacademy.s04.s02.n01.fruit.fruit.repository.FruitRepository;
 import cat.itacademy.s04.s02.n01.fruit.provider.dto.Provider;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,18 +37,28 @@ class FruitRepositoryTest {
     }
 
     @Test()
-    @DisplayName("Test must return error if the name is empty")
-    void save_testMustPasAndReturnErrorIfTheNameIsEmpty() {
+    @DisplayName("Test must return error if the value is empty")
+    void save_testMustReturnErrorIfTheNameIsEmpty() {
         Provider.ProviderRequest providerRequest = new Provider.ProviderRequest();
         providerRequest.setName("Las Frutas");
         providerRequest.setCountry("Spain");
         Provider provider =new Provider(providerRequest);
 
         Fruit fruit = new Fruit(null, 1, provider);
-        Fruit savedFruit = fruitRepository.save(fruit);
-
-        Assertions.assertThrows(InvalidFruitRequestException.class, () -> fruitRepository.save(fruit));
-
+        Assertions.assertThrows(ConstraintViolationException.class,() ->  fruitRepository.save(fruit));
     }
 
+
+
+    @Test()
+    @DisplayName("Test must return error if the value in kilos is 0")
+    void save_testMustReturnErrorIfTheValueZero() {
+        Provider.ProviderRequest providerRequest = new Provider.ProviderRequest();
+        providerRequest.setName("Las Frutas");
+        providerRequest.setCountry("Spain");
+        Provider provider =new Provider(providerRequest);
+
+        Fruit fruit = new Fruit("Pera", 0, provider);
+        Assertions.assertThrows(ConstraintViolationException.class,() ->  fruitRepository.save(fruit));
+    }
 }
