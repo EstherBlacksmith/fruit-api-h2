@@ -5,26 +5,29 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.annotation.DirtiesContext;
 
 import static io.restassured.RestAssured.given;
 
+
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class AcceptanceCreateFruitTest {
     @LocalServerPort
     private int port;
 
-    private static Long fruitId;
 
     @Autowired
     private ProviderRepository providerRepository;
 
-    @BeforeAll
+    @BeforeEach
     public void setup() {
         providerRepository.deleteAll();
         RestAssured.baseURI = "http://localhost";
@@ -38,14 +41,12 @@ public class AcceptanceCreateFruitTest {
                 """;
 
         given()
-                .contentType("application/json")
+                .contentType(ContentType.JSON)
                 .body(providerRequest)
                 .when()
                 .post("/provider")
                 .then()
-                .log().all()
                 .statusCode(201);
-
     }
 
     @Test

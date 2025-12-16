@@ -40,7 +40,7 @@ public class AcceptanceFindByIdFruitsTest {
                 """;
 
         given()
-                .contentType("application/json")
+                .contentType(ContentType.JSON)
                 .body(providerRequest)
                 .when()
                 .post("/provider")
@@ -72,7 +72,7 @@ public class AcceptanceFindByIdFruitsTest {
 
 
         given()
-                .accept("application/json")
+                .accept(ContentType.JSON)
                 .pathParam("id", 1)
                 .when()
                 .get("/fruits/{id}")
@@ -105,7 +105,7 @@ public class AcceptanceFindByIdFruitsTest {
 
 
         given()
-                .accept("application/json")
+                .accept(ContentType.JSON)
                 .pathParam("id", 2)
                 .when()
                 .get("/fruits/{id}")
