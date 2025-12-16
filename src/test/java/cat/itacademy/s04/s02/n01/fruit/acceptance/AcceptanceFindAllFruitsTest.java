@@ -9,16 +9,17 @@ import static org.hamcrest.Matchers.empty;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeAll;
+
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+
 import org.springframework.test.annotation.DirtiesContext;
 
 import static org.hamcrest.Matchers.*;
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class AcceptanceFindAllFruitsTest {
@@ -48,7 +49,6 @@ public class AcceptanceFindAllFruitsTest {
                 .when()
                 .post("/provider")
                 .then()
-                .log().all()
                 .statusCode(201);
     }
 
@@ -67,16 +67,18 @@ public class AcceptanceFindAllFruitsTest {
     public void testListFruitsNotEmptyAfterCreation() {
 
         String requestBody = """
-        {
-            "name": "poma",
-            "weightInKilos": 1
-        }
-        """;
+                {
+                  "name": "poma",
+                  "weightInKilos": 1,
+                  "providerName": "Las Frutas"
+                }
+                """;
 
         given()
                 .contentType(ContentType.JSON)
-                .queryParam("providerName", "Las Frutas")
                 .body(requestBody)
+                .queryParam("providerName", "Las Frutas")
+                .log().all()
                 .when()
                 .post("/fruits")
                 .then()
@@ -99,7 +101,24 @@ public class AcceptanceFindAllFruitsTest {
         String requestBody = """
                 {
                   "name": "poma",
-                  "weightInKilos": 1
+                  "weightInKilos": 1,
+                  "providerName": "Las Frutas"
+                }
+                """;
+        given()
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .queryParam("providerName", "Las Frutas")
+                .when()
+                .post("/fruits")
+                .then()
+                .statusCode(201);
+
+        requestBody = """
+                {
+                  "name": "Taronja",
+                  "weightInKilos": 1,
+                  "providerName": "Las Frutas"
                 }
                 """;
 
@@ -112,31 +131,7 @@ public class AcceptanceFindAllFruitsTest {
                 .then()
                 .statusCode(201);
 
-        requestBody = """
-                {
-                  "name": "Taronja",
-                  "weightInKilos": 1
-                }
-                """;
-
         given()
-                .contentType("application/json")
-                .queryParam("providerName", "Las Frutas")
-                .body(requestBody)
-                .when()
-                .post("/fruits")
-                .then()
-                .statusCode(201);
-
-        given()
-                .accept(ContentType.JSON)
-                .when()
-                .get("/fruits")
-                .then()
-                .statusCode(200)
-                .body( not(empty()));
-
-       given()
                 .accept(ContentType.JSON)
                 .when()
                 .get("/fruits")
@@ -144,18 +139,28 @@ public class AcceptanceFindAllFruitsTest {
                 .statusCode(200)
                 .body( not(empty()))
                 .body("name", hasItems("poma", "Taronja"))
-                .body("weightInKilos", hasItems(1, 1));;
+                .body("weightInKilos", hasItems(1, 1));
 
-        Response response =
+     /*  given()
+                .accept(ContentType.JSON)
+                .when()
+                .get("/fruits")
+                .then()
+                .statusCode(200)
+                .body( not(empty()))
+                .body("name", hasItems("poma", "Taronja"))
+                .body("weightInKilos", hasItems(1, 1));;*/
+
+      /*  Response response =
                 given()
                 .accept(ContentType.JSON)
                 .when()
                 .get("/fruits")
                 .then()
                 .extract()
-                .response();
+                .response();*/
 
-        System.out.println(response.prettyPrint());
+     //   System.out.println(response.prettyPrint());
     }
 
 }

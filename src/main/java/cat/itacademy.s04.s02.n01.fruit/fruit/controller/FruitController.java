@@ -33,7 +33,7 @@ public class FruitController {
 
     @PostMapping("/fruits")
     public ResponseEntity<FruitResponse> createFruit(
-            @Valid @RequestBody FruitRequest fruitRequest, @RequestParam String providerName) {
+                @Valid @RequestBody FruitRequest fruitRequest, @RequestParam String providerName) {
 
         FruitResponse fruitResponse = fruitService.save(fruitRequest, providerName);
 

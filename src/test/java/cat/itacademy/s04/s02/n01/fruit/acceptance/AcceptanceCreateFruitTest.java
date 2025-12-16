@@ -10,7 +10,6 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.annotation.DirtiesContext;
 
 import static io.restassured.RestAssured.given;
 
@@ -54,7 +53,8 @@ public class AcceptanceCreateFruitTest {
         String requestBody = """
                 {
                   "name": "poma",
-                  "weightInKilos": 1
+                  "weightInKilos": 1,
+                  "providerName": "Las Frutas"
                 }
                 """;
 
@@ -66,6 +66,7 @@ public class AcceptanceCreateFruitTest {
                 .when()
                 .post("/fruits")
                 .then()
+                .statusCode(201)
                 .extract()
                 .response();
 

@@ -24,6 +24,7 @@ public class Fruit {
     @JoinColumn(name = "provider_id")
     private Provider provider;
 
+    public Fruit() {}
 
     public Fruit(String name, int weightInKilos, Provider provider) {
         this.name = name;
