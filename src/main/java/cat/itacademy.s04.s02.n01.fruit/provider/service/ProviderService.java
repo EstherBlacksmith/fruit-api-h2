@@ -1,13 +1,19 @@
 package cat.itacademy.s04.s02.n01.fruit.provider.service;
 
+import cat.itacademy.s04.s02.n01.fruit.provider.controller.ProviderRequest;
+import cat.itacademy.s04.s02.n01.fruit.provider.controller.ProviderResponse;
 import cat.itacademy.s04.s02.n01.fruit.provider.dto.Provider;
 import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderDuplicateNameException;
+import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderNotFoundException;
 import cat.itacademy.s04.s02.n01.fruit.provider.repository.ProviderRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
 
 @Service
 @Validated
@@ -38,5 +44,34 @@ public class ProviderService {
                 saved.getName(),
                 saved.getCountry()
         );
+    }
+
+    public List<Provider> getAll() {
+        return providerRepository.findAll();
+    }
+
+    public ProviderResponse update(Long id, @Valid ProviderRequest providerRequest) {
+        Provider provider = providerRepository.findById(id).orElseThrow(() -> new ProviderNotFoundException("Provider doesn't exists"));
+        Provider updated = providerRepository.saveAndFlush(provider);
+        provider.setCountry(providerRequest.getCountry());
+        provider.setName(providerRequest.getName());
+
+        return new ProviderResponse(
+                updated.getId(),
+                updated.getName(),
+                updated.getCountry()
+        );
+
+    }
+
+    public Provider get(Long id) {
+        return providerRepository.findById(id)
+                .orElseThrow(() -> new ProviderNotFoundException("Provider doesn't exists"));
+    }
+
+    public Enum<HttpStatus> delete(Long id) {
+        Provider provider = providerRepository.findById(id).orElseThrow(() -> new ProviderNotFoundException("Provider doesn't exists"));
+        providerRepository.delete(provider);
+        return HttpStatus.NO_CONTENT;
     }
 }
