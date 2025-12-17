@@ -128,7 +128,7 @@ class FruitControllerTest {
     }
 
     @Test
-    void getFruits_returnsListIfAreFruitsInThInventoryANdhTTP200() throws Exception {
+    void getFruits_returnsListIfAreFruitsInThInventoryAndHTTP200() throws Exception {
         FruitRequest fruitRequest = new FruitRequest();
         fruitRequest.setName("Poma");
         fruitRequest.setWeightInKilos(1);
@@ -262,6 +262,33 @@ class FruitControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(fruitJson))
                 .andExpect(status().isNoContent());
+
+    }
+
+    @Test
+    void getFruitsByProviderId_returnListOfFruitsAndHTTPStatus200() throws Exception {
+        FruitRequest fruitRequest = new FruitRequest();
+        fruitRequest.setName("Poma");
+        fruitRequest.setWeightInKilos(10);
+
+        Fruit fruit = new Fruit(fruitRequest,provider);
+        List<Fruit> listFruit = new ArrayList<>();
+        listFruit.add(fruit);
+
+        FruitRequest fruitRequest2 = new FruitRequest();
+        fruitRequest.setName("Taronja");
+        fruitRequest.setWeightInKilos(10);
+
+        Fruit fruit2 = new Fruit(fruitRequest2,provider);
+        listFruit.add(fruit2);
+
+        when(fruitService.getAllFruitsByProviderId(provider.getId())).thenReturn(listFruit);
+
+        mockMvc.perform(get("/fruits/providerId={id}",1L)
+                .param("id", String.valueOf(1L)))
+                .andExpect(status().isOk())
+                .andExpect(result -> listFruit.contains(fruit2))
+                .andExpect(result -> listFruit.contains(fruit));
 
     }
 }
