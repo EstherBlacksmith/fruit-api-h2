@@ -8,6 +8,7 @@ import cat.itacademy.s04.s02.n01.fruit.fruit.exception.FruitNotFoundException;
 import cat.itacademy.s04.s02.n01.fruit.fruit.exception.InvalidFruitRequestException;
 import cat.itacademy.s04.s02.n01.fruit.fruit.service.FruitService;
 import cat.itacademy.s04.s02.n01.fruit.provider.dto.Provider;
+import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderNotFoundException;
 import cat.itacademy.s04.s02.n01.fruit.provider.service.ProviderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -290,5 +291,25 @@ class FruitControllerTest {
                 .andExpect(result -> listFruit.contains(fruit2))
                 .andExpect(result -> listFruit.contains(fruit));
 
+    }
+
+    @Test
+    void getFruitsByProviderId_returnErrorIfProviderDoesNotExists() throws Exception {
+        when(fruitService.getAllFruitsByProviderId(eq(Long.valueOf(2L))))
+                .thenThrow(new ProviderNotFoundException("Provider doesn't exists"));
+
+        mockMvc.perform(get("/fruits/providerId={id}",2L)
+                        .param("id", String.valueOf(2L)))
+                .andExpect(status().isNotFound())
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().string("Provider doesn't exists"));
+        /*
+        when(fruitService.get(eq(Long.valueOf(2L))))
+                .thenThrow(new FruitNotFoundException("Fruit doesn't exist"));
+
+        mockMvc.perform(get("/fruits/{id}", 2L))
+                .andExpect(status().isNotFound())
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().string("Fruit doesn't exist"));*/
     }
 }

@@ -3,6 +3,7 @@ package cat.itacademy.s04.s02.n01.fruit.exception;
 import cat.itacademy.s04.s02.n01.fruit.fruit.exception.FruitNotFoundException;
 import cat.itacademy.s04.s02.n01.fruit.fruit.exception.InvalidFruitRequestException;
 import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderDuplicateNameException;
+import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -40,6 +41,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ProviderDuplicateNameException.class)
     public ResponseEntity<String> handleProviderExists(ProviderDuplicateNameException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(ProviderNotFoundException.class)
+    public ResponseEntity<String> handleProviderNotFoud(ProviderNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
 }
