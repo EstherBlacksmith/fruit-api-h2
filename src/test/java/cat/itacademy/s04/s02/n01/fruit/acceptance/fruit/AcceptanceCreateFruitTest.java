@@ -75,4 +75,48 @@ public class AcceptanceCreateFruitTest {
         System.out.println("Created Fruit Status: " + statusCode);
     }
 
+    @Test
+    public void testReturnError404IfProviderIsNotValidOnCreateFruit() {
+        String requestBody = """
+                {
+                  "name": "poma",
+                  "weightInKilos": 1,
+                  "providerName": "inexistent provider"
+                }
+                """;
+
+        given()
+                .contentType(ContentType.JSON)
+                .queryParam("providerName", "inexistent provider")
+                .body(requestBody)
+                .log().all()
+                .when()
+                .post("/fruits")
+                .then()
+                .statusCode(404);
+
+    }
+
+    @Test
+    public void testReturnErrorIfProviderIsNotIndicatedOnCreteFruit() {
+        String requestBody = """
+                {
+                  "name": "poma",
+                  "weightInKilos": 1
+                }
+                """;
+
+        given()
+                .contentType(ContentType.JSON)
+                .queryParam("providerName", "")
+                .body(requestBody)
+                .log().all()
+                .when()
+                .post("/fruits")
+                .then()
+                .statusCode(400);
+
+    }
+
+
 }
