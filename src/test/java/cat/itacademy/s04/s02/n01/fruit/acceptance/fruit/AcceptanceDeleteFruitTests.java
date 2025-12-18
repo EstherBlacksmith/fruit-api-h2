@@ -1,5 +1,4 @@
-package cat.itacademy.s04.s02.n01.fruit.acceptance;
-
+package cat.itacademy.s04.s02.n01.fruit.acceptance.fruit;
 
 import cat.itacademy.s04.s02.n01.fruit.provider.repository.ProviderRepository;
 import io.restassured.RestAssured;
@@ -10,6 +9,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 
 import static io.restassured.RestAssured.given;
@@ -19,10 +19,9 @@ import static org.hamcrest.Matchers.*;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-public class AcceptanceFindByProviderIdTest {
+public class AcceptanceDeleteFruitTests {
     @LocalServerPort
     private int port;
-
 
     @Autowired
     private ProviderRepository providerRepository;
@@ -50,8 +49,7 @@ public class AcceptanceFindByProviderIdTest {
     }
 
     @Test
-    public void testGetFruitByProviderIdReturnDetailsIfIdExists() {
-
+    public void testDeleteFruitByIdReturnNoContent() {
         String requestBody = """
                 {
                   "name": "poma",
@@ -64,46 +62,24 @@ public class AcceptanceFindByProviderIdTest {
                 .contentType(ContentType.JSON)
                 .body(requestBody)
                 .queryParam("providerName", "Las Frutas")
-                .log().all()
-                .when()
-                .post("/fruits")
-                .then()
-                .log().all()
-                .statusCode(201);
-
-        String requestBody2 = """
-                {
-                  "name": "taronja",
-                  "weightInKilos": 10,
-                  "providerName": "Las Frutas"
-                }
-                """;
-
-        given()
-                .contentType(ContentType.JSON)
-                .body(requestBody2)
-                .queryParam("providerName", "Las Frutas")
                 .when()
                 .post("/fruits")
                 .then()
                 .statusCode(201);
-
 
         given()
                 .accept(ContentType.JSON)
-                .pathParam("id", 1L)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .pathParam("id", 1)
                 .log().all()
                 .when()
-                .get("/fruits/providerId/{id}")
+                .delete("/fruits/{id}")
                 .then()
-                .statusCode(200)
-                .body( not(empty()))
-                .body("name", hasItems("poma", "taronja"))
-                .body("weightInKilos", hasItems(1, 1));
+                .statusCode(204)
+                .body( emptyOrNullString());
     }
-
     @Test
-    public void testGetFruitByIdReturnErrorIfProviderDoesNotExists() {
+    public void testDeleteFruitByIdReturnErrorIfFruitDOesNOtExists() {
         String requestBody = """
                 {
                   "name": "poma",
@@ -111,27 +87,11 @@ public class AcceptanceFindByProviderIdTest {
                   "providerName": "Las Frutas"
                 }
                 """;
+
         given()
                 .contentType(ContentType.JSON)
                 .body(requestBody)
                 .queryParam("providerName", "Las Frutas")
-                .when()
-                .post("/fruits")
-                .then()
-                .statusCode(201);
-
-        requestBody = """
-                {
-                  "name": "Taronja",
-                  "weightInKilos": 1,
-                  "providerName": "Las Frutas"
-                }
-                """;
-
-        given()
-                .contentType(ContentType.JSON)
-                .queryParam("providerName", "Las Frutas")
-                .body(requestBody)
                 .when()
                 .post("/fruits")
                 .then()
@@ -139,11 +99,13 @@ public class AcceptanceFindByProviderIdTest {
 
         given()
                 .accept(ContentType.JSON)
-                .when()
-                .get("/fruits/providerId/{id}", 8L)
-                .then()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .pathParam("id", 3)
                 .log().all()
+                .when()
+                .delete("/fruits/{id}")
+                .then()
                 .statusCode(404);
-
     }
+
 }

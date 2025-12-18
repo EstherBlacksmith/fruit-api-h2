@@ -1,28 +1,25 @@
-package cat.itacademy.s04.s02.n01.fruit.acceptance;
+package cat.itacademy.s04.s02.n01.fruit.acceptance.fruit;
+
 
 import cat.itacademy.s04.s02.n01.fruit.provider.repository.ProviderRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.empty;
-
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-
 import org.springframework.test.annotation.DirtiesContext;
 
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
+
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-public class AcceptanceFindAllFruitsTest {
+public class AcceptanceFindByProviderIdTest {
     @LocalServerPort
     private int port;
 
@@ -53,18 +50,7 @@ public class AcceptanceFindAllFruitsTest {
     }
 
     @Test
-    public void testListFruitsReturnEmptyListIFThereAreNotFruitsCreated() {
-        given()
-                .accept(ContentType.JSON)
-                .when()
-                .get("/fruits")
-                .then()
-                .statusCode(200)
-                .body("$", empty());
-    }
-
-    @Test
-    public void testListFruitsNotEmptyAfterCreation() {
+    public void testGetFruitByProviderIdReturnDetailsIfIdExists() {
 
         String requestBody = """
                 {
@@ -85,19 +71,39 @@ public class AcceptanceFindAllFruitsTest {
                 .log().all()
                 .statusCode(201);
 
+        String requestBody2 = """
+                {
+                  "name": "taronja",
+                  "weightInKilos": 10,
+                  "providerName": "Las Frutas"
+                }
+                """;
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(requestBody2)
+                .queryParam("providerName", "Las Frutas")
+                .when()
+                .post("/fruits")
+                .then()
+                .statusCode(201);
+
+
         given()
                 .accept(ContentType.JSON)
+                .pathParam("id", 1L)
+                .log().all()
                 .when()
-                .get("/fruits")
+                .get("/fruits/providerId/{id}")
                 .then()
                 .statusCode(200)
                 .body( not(empty()))
-                .body("name", notNullValue())
-                .body("weightInKilos", notNullValue());
+                .body("name", hasItems("poma", "taronja"))
+                .body("weightInKilos", hasItems(1, 1));
     }
 
     @Test
-    public void testGetListFruits() {
+    public void testGetFruitByIdReturnErrorIfProviderDoesNotExists() {
         String requestBody = """
                 {
                   "name": "poma",
@@ -134,12 +140,10 @@ public class AcceptanceFindAllFruitsTest {
         given()
                 .accept(ContentType.JSON)
                 .when()
-                .get("/fruits")
+                .get("/fruits/providerId/{id}", 8L)
                 .then()
-                .statusCode(200)
-                .body( not(empty()))
-                .body("name", hasItems("poma", "Taronja"))
-                .body("weightInKilos", hasItems(1, 1));
-    }
+                .log().all()
+                .statusCode(404);
 
+    }
 }
