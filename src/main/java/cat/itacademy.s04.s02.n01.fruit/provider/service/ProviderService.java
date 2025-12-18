@@ -51,10 +51,18 @@ public class ProviderService {
     }
 
     public ProviderResponse update(Long id, @Valid ProviderRequest providerRequest) {
-        Provider provider = providerRepository.findById(id).orElseThrow(() -> new ProviderNotFoundException("Provider doesn't exists"));
-        Provider updated = providerRepository.saveAndFlush(provider);
-        provider.setCountry(providerRequest.getCountry());
+        Provider provider = providerRepository.findById(id)
+                .orElseThrow(() -> new ProviderNotFoundException("Provider doesn't exists"));
+
+        providerRepository.findByName(providerRequest.getName()).ifPresent(providerToFind -> {
+            throw new ProviderDuplicateNameException("Provider with name '" + providerRequest.getName()
+                    + "' already exists");
+        });
+
         provider.setName(providerRequest.getName());
+        provider.setCountry(providerRequest.getCountry());
+
+        Provider updated = providerRepository.saveAndFlush(provider);
 
         return new ProviderResponse(
                 updated.getId(),

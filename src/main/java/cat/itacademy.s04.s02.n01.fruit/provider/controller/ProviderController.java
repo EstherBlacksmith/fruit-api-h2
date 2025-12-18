@@ -32,8 +32,6 @@ public class ProviderController {
 
     }
 
-    //TODO GET	/providers	Llistar proveïdors
-
     @GetMapping("/provider")
     public ResponseEntity<List<Provider>> getProvider() {
 
