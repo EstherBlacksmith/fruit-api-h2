@@ -9,6 +9,5 @@ import java.util.List;
 
 @Repository
 public interface FruitRepository extends JpaRepository<Fruit, Long> {
-    @EntityGraph(attributePaths = {"providerId"})
-    List<Fruit> findByProviderId(Long providerId);
+    List<Fruit> findByProvider_Id(Long providerId);
 }

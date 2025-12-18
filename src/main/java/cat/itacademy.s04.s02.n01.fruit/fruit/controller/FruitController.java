@@ -78,7 +78,7 @@ public class FruitController {
 
     //TODO GET	/fruits?providerId={id}	Obtenir fruites d’un proveïdor
 
-    @GetMapping("/fruits/providerId={id}")
+    @GetMapping("/fruits/providerId/{id}")
     public ResponseEntity<List<Fruit>> getFruitsByProviderId(
             @PathVariable Long id) {
 

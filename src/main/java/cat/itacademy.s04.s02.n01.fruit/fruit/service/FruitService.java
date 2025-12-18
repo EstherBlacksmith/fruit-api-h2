@@ -89,8 +89,6 @@ public class FruitService {
 
     public List<Fruit> getAllFruitsByProviderId(Long id) {
         providerRepository.findById(id).orElseThrow(() -> new ProviderNotFoundException("Provider doesn't exists"));
-        return fruitRepository.findByProviderId(id);
-
-
+        return fruitRepository.findByProvider_Id(id);
     }
 }

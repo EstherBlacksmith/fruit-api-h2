@@ -303,13 +303,5 @@ class FruitControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string("Provider doesn't exists"));
-        /*
-        when(fruitService.get(eq(Long.valueOf(2L))))
-                .thenThrow(new FruitNotFoundException("Fruit doesn't exist"));
-
-        mockMvc.perform(get("/fruits/{id}", 2L))
-                .andExpect(status().isNotFound())
-                .andExpect(status().is4xxClientError())
-                .andExpect(content().string("Fruit doesn't exist"));*/
     }
 }
