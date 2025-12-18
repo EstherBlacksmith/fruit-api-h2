@@ -1,6 +1,8 @@
 package cat.itacademy.s04.s02.n01.fruit.provider.controller;
 
 import cat.itacademy.s04.s02.n01.fruit.provider.dto.Provider;
+import cat.itacademy.s04.s02.n01.fruit.provider.dto.ProviderRequest;
+import cat.itacademy.s04.s02.n01.fruit.provider.dto.ProviderResponse;
 import cat.itacademy.s04.s02.n01.fruit.provider.service.ProviderService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

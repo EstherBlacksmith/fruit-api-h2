@@ -1,4 +1,4 @@
-package cat.itacademy.s04.s02.n01.fruit.provider.controller;
+package cat.itacademy.s04.s02.n01.fruit.provider.dto;
 
 import lombok.Getter;
 
