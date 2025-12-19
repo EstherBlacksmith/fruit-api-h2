@@ -78,7 +78,7 @@ public class AcceptanceFindByIdFruitsTest {
                 .get("/fruits/{id}")
                 .then()
                 .statusCode(200)
-                .body( not(empty()))
+                .body(not(empty()))
                 .body("name", notNullValue())
                 .body("weightInKilos", notNullValue());
     }

@@ -44,17 +44,17 @@ Ensure you have the following installed on your system:
 
 ### Steps
 
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/EstherBlacksmith/fruit-api-h2.git](https://github.com/EstherBlacksmith/fruit-api-h2.git)
-    cd fruit-api-h2
-    ```
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/EstherBlacksmith/fruit-api-h2.git](https://github.com/EstherBlacksmith/fruit-api-h2.git)
+   cd fruit-api-h2
+   ```
 
-2.  **Build the project:**
-    Use Maven to compile the code and package it into a runnable JAR file.
-    ```bash
-    mvn clean install
-    ```
+2. **Build the project:**
+   Use Maven to compile the code and package it into a runnable JAR file.
+   ```bash
+   mvn clean install
+   ```
 
 ---
 
@@ -67,43 +67,48 @@ You can run the application directly from the generated JAR file:
 ```bash
 java -jar target/fruit-api-h2-0.0.1-SNAPSHOT.jar
 ````
+
 The API will start on the default Spring Boot port, usually http://localhost:8080.
 
 📖 API EndpointsThe base URL for all endpoints is http://localhost:8080/api/fruits.
-| Method  | Endpoint  |  Description | Request Body |Example|
+| Method | Endpoint | Description | Request Body |Example|
 |---|---|---|---|---|
 | GET | /api/fruits|Retrieves a list of all fruits.|(None)|http://localhost:8080/fruits
 | GET |/api/fruits/{id}|Retrieves a single fruit by its ID.|(None)|http://localhost:8080/fruits/1L
-| POST|/api/fruits|Creates a new fruit entry.|"{""name"": ""Mango"", ""weightInKilos"":""1""}"|http://localhost:8080/fruits?name=Mango&weightInKilos=1
-| PUT |/api/fruits/{id}|Updates the fruit with the given ID.|"{""name"": ""Kiwi"", ""weightInKilos"": ""1""}"|http://localhost:8080/fruits?ID=1l&name=Mango&weightInKilos=1
+| POST|/api/fruits|Creates a new fruit entry.|"{""name"": ""Mango"", ""weightInKilos"":""
+1""}"|http://localhost:8080/fruits?name=Mango&weightInKilos=1
+| PUT |/api/fruits/{id}|Updates the fruit with the given ID.|"{""name"": ""Kiwi"", ""weightInKilos"": ""
+1""}"|http://localhost:8080/fruits?ID=1l&name=Mango&weightInKilos=1
 | DELETE |/api/fruits/{id}|Deletes the fruit with the given ID.|(None)|http://localhost:8080/fruits/1L
-
 
 Example Request (using cURL)
 
 To get all fruits after starting the server:
+
 ```
 curl -X GET http://localhost:8080/api/fruits
 ```
 
-
 ⚙️ Database Access (H2 Console)
 
-Since this project uses the H2 in-memory database, the Spring Boot configuration likely enables the H2 console for easy inspection of the database schema and data.
+Since this project uses the H2 in-memory database, the Spring Boot configuration likely enables the H2 console for easy
+inspection of the database schema and data.
 
-1.  Start the application (as shown in [🚀 Getting Started]).
-2.  Open your web browser and navigate to: http://localhost:8080/h2-console
-3.  Ensure the JDBC URL matches what is configured in application.properties (the default is often jdbc:h2:mem:testdb or similar).
-4.  Click Connect to view the database tables.
+1. Start the application (as shown in [🚀 Getting Started]).
+2. Open your web browser and navigate to: http://localhost:8080/h2-console
+3. Ensure the JDBC URL matches what is configured in application.properties (the default is often jdbc:h2:mem:testdb or
+   similar).
+4. Click Connect to view the database tables.
 
-🤝 ContributingWe welcome contributions! 
+🤝 ContributingWe welcome contributions!
 
 Please follow these general steps:
-1.  Fork the Project.
-2.  Create your Feature Branch (git checkout -b feature/NewEndpoint).
-3.  Commit your Changes (git commit -m 'feat: Add a new fruit endpoint').
-4.  Push to the Branch (git push origin feature/NewEndpoint).
-5.  Open a Pull Request.
+
+1. Fork the Project.
+2. Create your Feature Branch (git checkout -b feature/NewEndpoint).
+3. Commit your Changes (git commit -m 'feat: Add a new fruit endpoint').
+4. Push to the Branch (git push origin feature/NewEndpoint).
+5. Open a Pull Request.
 
 📝 LicenseDistributed under the MIT License.
 

@@ -11,10 +11,8 @@ import cat.itacademy.s04.s02.n01.fruit.provider.dto.Provider;
 import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderNotFoundException;
 import cat.itacademy.s04.s02.n01.fruit.provider.service.ProviderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -46,13 +44,13 @@ class FruitControllerTest {
     private Provider provider;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         Provider.ProviderRequest providerRequest = new Provider.ProviderRequest();
         providerRequest.setName("Las Frutas");
         providerRequest.setCountry("Spain");
-        provider = new Provider(providerRequest.getName(),providerRequest.getCountry());
+        provider = new Provider(providerRequest.getName(), providerRequest.getCountry());
         when(providerService.save(any(Provider.ProviderRequest.class)))
-                .thenReturn(new Provider.ProviderResponse(1L,providerRequest.getName(),providerRequest.getCountry()));
+                .thenReturn(new Provider.ProviderResponse(1L, providerRequest.getName(), providerRequest.getCountry()));
 
     }
 
@@ -63,8 +61,8 @@ class FruitControllerTest {
         fruitRequest.setWeightInKilos(1);
         fruitRequest.setProviderName("Las Frutas");
 
-        when(fruitService.save(any(fruitRequest.getClass()),eq(provider.getName())))
-                .thenReturn(new FruitResponse(1L, "Poma", 1,"Las Frutas"));
+        when(fruitService.save(any(fruitRequest.getClass()), eq(provider.getName())))
+                .thenReturn(new FruitResponse(1L, "Poma", 1, "Las Frutas"));
 
         ObjectMapper mapper = new ObjectMapper();
         String fruitJson = mapper.writeValueAsString(fruitRequest);
@@ -87,8 +85,8 @@ class FruitControllerTest {
         fruitRequest.setName("Poma");
         fruitRequest.setWeightInKilos(0);
 
-        when(fruitService.save(any(fruitRequest.getClass()),eq(provider.getName())))
-                .thenReturn(new FruitResponse(1L, "Poma", 0,provider.getName()));
+        when(fruitService.save(any(fruitRequest.getClass()), eq(provider.getName())))
+                .thenReturn(new FruitResponse(1L, "Poma", 0, provider.getName()));
 
         ObjectMapper mapper = new ObjectMapper();
         String fruitJson = mapper.writeValueAsString(fruitRequest);
@@ -105,7 +103,7 @@ class FruitControllerTest {
         fruitRequest.setName("Poma");
         fruitRequest.setWeightInKilos(1);
 
-        Fruit fruit = new Fruit(fruitRequest,provider);
+        Fruit fruit = new Fruit(fruitRequest, provider);
         when(fruitService.get(1L)).thenReturn(fruit);
 
         mockMvc.perform(get("/fruits/{id}", 1L))
@@ -134,7 +132,7 @@ class FruitControllerTest {
         fruitRequest.setName("Poma");
         fruitRequest.setWeightInKilos(1);
 
-        Fruit fruit = new Fruit(fruitRequest,provider);
+        Fruit fruit = new Fruit(fruitRequest, provider);
         List<Fruit> listFruit = new ArrayList<>();
         listFruit.add(fruit);
 
@@ -205,7 +203,7 @@ class FruitControllerTest {
     void updateFruit_returnOkAndTheUpdatedFruitIfTheDataIsValidAndTheFruitExists() throws Exception {
 
         when(fruitService.update(eq(Long.valueOf(1L)), any(FruitRequest.class)))
-                .thenReturn(new FruitResponse(1L, "Taronja", 11,provider.getName()));
+                .thenReturn(new FruitResponse(1L, "Taronja", 11, provider.getName()));
 
         FruitRequest fruitRequest = new FruitRequest();
         fruitRequest.setName("Taronja");
@@ -226,7 +224,7 @@ class FruitControllerTest {
     }
 
     @Test
-    void deleteFruit_returnErrorIfTheFruitDoesNotExists() throws Exception {
+    void deleteFruitReturnErrorIfTheFruitDoesNotExists() throws Exception {
         when(fruitService.delete(1L)).thenThrow(new FruitNotFoundException("Fruit doesn't exist"));
 
         FruitRequest fruitRequest = new FruitRequest();
@@ -246,6 +244,7 @@ class FruitControllerTest {
                 .andExpect(content().string("Fruit doesn't exist"));
 
     }
+
     @Test
     void deleteFruit_returnNoContentIfTheFruitIsDeleted() throws Exception {
         when(fruitService.delete(1L)).thenReturn(HttpStatus.NO_CONTENT);
@@ -267,12 +266,12 @@ class FruitControllerTest {
     }
 
     @Test
-    void getFruitsByProviderId_returnListOfFruitsAndHTTPStatus200() throws Exception {
+    void getFruitsByProviderIdReturnListOfFruitsAndHTTPStatus200() throws Exception {
         FruitRequest fruitRequest = new FruitRequest();
         fruitRequest.setName("Poma");
         fruitRequest.setWeightInKilos(10);
 
-        Fruit fruit = new Fruit(fruitRequest,provider);
+        Fruit fruit = new Fruit(fruitRequest, provider);
         List<Fruit> listFruit = new ArrayList<>();
         listFruit.add(fruit);
 
@@ -280,13 +279,13 @@ class FruitControllerTest {
         fruitRequest.setName("Taronja");
         fruitRequest.setWeightInKilos(10);
 
-        Fruit fruit2 = new Fruit(fruitRequest2,provider);
+        Fruit fruit2 = new Fruit(fruitRequest2, provider);
         listFruit.add(fruit2);
-
+        Long id = provider.getId();
         when(fruitService.getAllFruitsByProviderId(provider.getId())).thenReturn(listFruit);
 
-        mockMvc.perform(get("/fruits/providerId={id}",1L)
-                .param("id", String.valueOf(1L)))
+        mockMvc.perform(get("/fruits?providerId={id}", id)
+                        .param("id", String.valueOf(id)))
                 .andExpect(status().isOk())
                 .andExpect(result -> listFruit.contains(fruit2))
                 .andExpect(result -> listFruit.contains(fruit));
@@ -294,12 +293,12 @@ class FruitControllerTest {
     }
 
     @Test
-    void getFruitsByProviderId_returnErrorIfProviderDoesNotExists() throws Exception {
-        when(fruitService.getAllFruitsByProviderId(eq(Long.valueOf(2L))))
+    void getFruitsByProviderIdReturnErrorIfProviderDoesNotExists() throws Exception {
+        when(fruitService.getAllFruitsByProviderId(eq(Long.valueOf(999L))))
                 .thenThrow(new ProviderNotFoundException("Provider doesn't exists"));
 
-        mockMvc.perform(get("/fruits/providerId={id}",2L)
-                        .param("id", String.valueOf(2L)))
+        mockMvc.perform(get("/fruits?providerId={id}", 999L)
+                        .param("id", String.valueOf(999L)))
                 .andExpect(status().isNotFound())
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string("Provider doesn't exists"));

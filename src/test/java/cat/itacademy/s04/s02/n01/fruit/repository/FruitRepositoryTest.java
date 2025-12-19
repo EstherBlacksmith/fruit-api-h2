@@ -1,7 +1,6 @@
 package cat.itacademy.s04.s02.n01.fruit.repository;
 
 import cat.itacademy.s04.s02.n01.fruit.fruit.dto.Fruit;
-import cat.itacademy.s04.s02.n01.fruit.fruit.exception.FruitNotFoundException;
 import cat.itacademy.s04.s02.n01.fruit.fruit.repository.FruitRepository;
 import cat.itacademy.s04.s02.n01.fruit.provider.dto.Provider;
 import cat.itacademy.s04.s02.n01.fruit.provider.repository.ProviderRepository;
@@ -13,7 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 class FruitRepositoryTest {
@@ -25,7 +25,7 @@ class FruitRepositoryTest {
     private Provider provider;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         Provider.ProviderRequest providerRequest = new Provider.ProviderRequest();
         providerRequest.setName("Las Frutas");
         providerRequest.setCountry("Spain");
@@ -111,8 +111,3 @@ class FruitRepositoryTest {
     }
 
 }
-/*If the data is valid, the system returns HTTP 200 OK with the updated fruit.
-
-If the ID does not exist, it returns HTTP 404 Not Found.
-
-If the data is invalid, it returns HTTP 400 Bad Request.*/

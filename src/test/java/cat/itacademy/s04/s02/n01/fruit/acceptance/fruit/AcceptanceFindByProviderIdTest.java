@@ -23,7 +23,6 @@ public class AcceptanceFindByProviderIdTest {
     @LocalServerPort
     private int port;
 
-
     @Autowired
     private ProviderRepository providerRepository;
 
@@ -47,6 +46,7 @@ public class AcceptanceFindByProviderIdTest {
                 .post("/provider")
                 .then()
                 .statusCode(201);
+
     }
 
     @Test
@@ -88,16 +88,14 @@ public class AcceptanceFindByProviderIdTest {
                 .then()
                 .statusCode(201);
 
-
         given()
                 .accept(ContentType.JSON)
-                .pathParam("id", 1L)
                 .log().all()
                 .when()
-                .get("/fruits/providerId/{id}")
+                .get("/fruits?providerId={id}", 1L)
                 .then()
                 .statusCode(200)
-                .body( not(empty()))
+                .body(not(empty()))
                 .body("name", hasItems("poma", "taronja"))
                 .body("weightInKilos", hasItems(1, 1));
     }
@@ -139,11 +137,12 @@ public class AcceptanceFindByProviderIdTest {
 
         given()
                 .accept(ContentType.JSON)
+                .queryParam("providerId", 999L)
+                .log().all()
                 .when()
-                .get("/fruits/providerId/{id}", 8L)
+                .get("/fruits?providerId={id}", 999L)
                 .then()
                 .log().all()
                 .statusCode(404);
-
     }
 }

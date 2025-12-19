@@ -3,7 +3,6 @@ package cat.itacademy.s04.s02.n01.fruit.acceptance.provider;
 import cat.itacademy.s04.s02.n01.fruit.provider.repository.ProviderRepository;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.h2.util.TempFileDeleter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -14,7 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -65,7 +64,7 @@ class AcceptanceUpdateProviderTest {
                 .put("/provider/{id}")
                 .then()
                 .statusCode(200)
-                .body("name",equalTo("Las Frutas2"))
+                .body("name", equalTo("Las Frutas2"))
                 .body("country", equalTo("Belgium"));
     }
 

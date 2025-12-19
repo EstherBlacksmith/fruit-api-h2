@@ -115,7 +115,7 @@ class AcceptanceDeleteProviderTest {
                 }
                 """;
 
-   given()
+        given()
                 .contentType(ContentType.JSON)
                 .queryParam("providerName", "Fruticas")
                 .body(requestBodyFruits)

@@ -1,12 +1,10 @@
 package cat.itacademy.s04.s02.n01.fruit.services;
 
-import cat.itacademy.s04.s02.n01.fruit.provider.dto.ProviderResponse;
-import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderDuplicateNameException;
 import cat.itacademy.s04.s02.n01.fruit.provider.dto.Provider;
+import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderDuplicateNameException;
 import cat.itacademy.s04.s02.n01.fruit.provider.repository.ProviderRepository;
 import cat.itacademy.s04.s02.n01.fruit.provider.service.ProviderService;
 import org.junit.jupiter.api.Assertions;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,10 +18,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
-
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)

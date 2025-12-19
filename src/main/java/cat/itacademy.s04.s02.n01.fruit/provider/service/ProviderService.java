@@ -1,8 +1,8 @@
 package cat.itacademy.s04.s02.n01.fruit.provider.service;
 
+import cat.itacademy.s04.s02.n01.fruit.provider.dto.Provider;
 import cat.itacademy.s04.s02.n01.fruit.provider.dto.ProviderRequest;
 import cat.itacademy.s04.s02.n01.fruit.provider.dto.ProviderResponse;
-import cat.itacademy.s04.s02.n01.fruit.provider.dto.Provider;
 import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderDuplicateNameException;
 import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderHasFruitsAssociatedException;
 import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderNotFoundException;
@@ -79,6 +79,7 @@ public class ProviderService {
         return providerRepository.findById(id)
                 .orElseThrow(() -> new ProviderNotFoundException("Provider doesn't exists"));
     }
+
     @Transactional
     public HttpStatus delete(Long id) {
         Provider provider = providerRepository.findById(id).orElseThrow(() -> new ProviderNotFoundException("Provider doesn't exists"));

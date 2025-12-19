@@ -13,7 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.emptyOrNullString;
 
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -76,8 +76,9 @@ public class AcceptanceDeleteFruitTests {
                 .delete("/fruits/{id}")
                 .then()
                 .statusCode(204)
-                .body( emptyOrNullString());
+                .body(emptyOrNullString());
     }
+
     @Test
     public void testDeleteFruitByIdReturnErrorIfFruitDOesNOtExists() {
         String requestBody = """

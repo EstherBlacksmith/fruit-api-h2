@@ -1,22 +1,17 @@
 package cat.itacademy.s04.s02.n01.fruit.acceptance.fruit;
 
 import cat.itacademy.s04.s02.n01.fruit.provider.repository.ProviderRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.empty;
-
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-
 import org.springframework.test.annotation.DirtiesContext;
 
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -91,7 +86,7 @@ public class AcceptanceFindAllFruitsTest {
                 .get("/fruits")
                 .then()
                 .statusCode(200)
-                .body( not(empty()))
+                .body(not(empty()))
                 .body("name", notNullValue())
                 .body("weightInKilos", notNullValue());
     }
@@ -137,7 +132,7 @@ public class AcceptanceFindAllFruitsTest {
                 .get("/fruits")
                 .then()
                 .statusCode(200)
-                .body( not(empty()))
+                .body(not(empty()))
                 .body("name", hasItems("poma", "Taronja"))
                 .body("weightInKilos", hasItems(1, 1));
     }
