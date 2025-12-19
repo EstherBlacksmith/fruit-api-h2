@@ -80,7 +80,7 @@ public class ProviderService {
                 .orElseThrow(() -> new ProviderNotFoundException("Provider doesn't exists"));
     }
     @Transactional
-    public Enum<HttpStatus> delete(Long id) {
+    public HttpStatus delete(Long id) {
         Provider provider = providerRepository.findById(id).orElseThrow(() -> new ProviderNotFoundException("Provider doesn't exists"));
 
         try {

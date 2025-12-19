@@ -83,6 +83,7 @@ public class FruitService {
     public Enum<HttpStatus> delete(Long id) {
         Fruit fruit = fruitRepository.findById(id).orElseThrow(() -> new FruitNotFoundException("Fruit doesn't exists"));
         fruitRepository.delete(fruit);
+        fruitRepository.flush();
         return HttpStatus.NO_CONTENT;
 
     }

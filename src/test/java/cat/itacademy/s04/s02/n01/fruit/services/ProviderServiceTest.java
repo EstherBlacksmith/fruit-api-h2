@@ -1,5 +1,6 @@
 package cat.itacademy.s04.s02.n01.fruit.services;
 
+import cat.itacademy.s04.s02.n01.fruit.provider.dto.ProviderResponse;
 import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderDuplicateNameException;
 import cat.itacademy.s04.s02.n01.fruit.provider.dto.Provider;
 import cat.itacademy.s04.s02.n01.fruit.provider.repository.ProviderRepository;
@@ -15,6 +16,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -48,8 +53,6 @@ public class ProviderServiceTest {
         Mockito.verify(providerRepository, times(1)).save(any(Provider.class));
     }
 
-
-
     @Test
     void save_thenReturnErrorIdProviderResponseWithIdIfTheNameAreDuplicated() {
         Provider.ProviderRequest providerRequest = new Provider.ProviderRequest();
@@ -62,7 +65,40 @@ public class ProviderServiceTest {
             providerService.save(providerRequest);
         });
 
-        Mockito.verify(providerRepository, times(1)).save(any(Provider.class));
+        verify(providerRepository, times(1)).save(any(Provider.class));
+    }
+
+    @Test
+    void getAll_returnsList() {
+        Provider.ProviderRequest providerRequest = new Provider.ProviderRequest();
+        providerRequest.setName("Frutas SL");
+        providerRequest.setCountry("Spain");
+        Provider provider = new Provider(providerRequest);
+        when(providerRepository.save(any(Provider.class))).thenReturn(provider);
+
+        when(providerRepository.findAll()).thenReturn(List.of(provider));
+
+        List<Provider> result = providerService.getAll();
+
+        assertThat(result).hasSize(1);
+        assertThat(result.getFirst().getName()).isEqualTo("Frutas SL");
+    }
+
+    @Test
+    void get_existingId_returnsProvider() {
+        Provider.ProviderRequest providerRequest = new Provider.ProviderRequest();
+        providerRequest.setName("Frutas SL");
+        providerRequest.setCountry("Spain");
+
+        Provider provider = new Provider(providerRequest);
+        providerRepository.save(provider);
+        Long id = provider.getId();
+
+        when(providerRepository.findById(provider.getId())).thenReturn(Optional.of(provider));
+
+        Provider result = providerService.get(id);
+
+        assertThat(result.getId()).isEqualTo(id);
     }
 
 }
