@@ -22,13 +22,19 @@ public class FruitController {
     }
 
     @GetMapping("/fruits")
-    public ResponseEntity<List<Fruit>> getFruits() {
+    public ResponseEntity<List<Fruit>> getFruits(
+            @RequestParam(name = "providerId", required = false) Long id) {
 
-        List<Fruit> listFruit = fruitService.getAll();
+        List<Fruit> listFruits;
+        if (id != null) {
+            listFruits = fruitService.getAllFruitsByProviderId(id);
+        } else {
+            listFruits = fruitService.getAll();
+        }
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(listFruit);
+                .body(listFruits);
     }
 
     @PostMapping("/fruits")
@@ -76,16 +82,5 @@ public class FruitController {
                 .body(fruitResponse);
     }
 
-    //TODO GET	/fruits?providerId={id}	Obtenir fruites d’un proveïdor
 
-    @GetMapping("/fruits/providerId/{id}")
-    public ResponseEntity<List<Fruit>> getFruitsByProviderId(
-            @PathVariable Long id) {
-
-        List<Fruit> listFruits = fruitService.getAllFruitsByProviderId(id);
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(listFruits);
-    }
 }

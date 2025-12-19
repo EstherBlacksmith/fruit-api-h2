@@ -2,7 +2,6 @@ package cat.itacademy.s04.s02.n01.fruit.acceptance.provider;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -12,7 +11,6 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.hasItems;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -64,7 +62,7 @@ class AcceptanceFindAllProvidersTest {
                 .get("/provider")
                 .then()
                 .statusCode(200)
-                .body( not(empty()))
+                .body(not(empty()))
                 .body("name", hasItems("Los manjares", "Las Frutas"));
     }
 
