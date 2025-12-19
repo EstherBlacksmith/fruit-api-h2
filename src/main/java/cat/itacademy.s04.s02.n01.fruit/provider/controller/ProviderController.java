@@ -42,8 +42,6 @@ public class ProviderController {
                 .body(listProvider);
     }
 
-    //TODO PUT	/providers/{id}	Actualitzar proveïdor
-
     @PutMapping("/provider/{id}")
     public ResponseEntity<ProviderResponse> updateFruit(
             @PathVariable Long id,
@@ -56,8 +54,8 @@ public class ProviderController {
                 .body(providerResponse);
     }
 
-    //TODO DELETE	/providers/{id}	Eliminar proveïdor
     @DeleteMapping("/provider/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Provider> deleteProvider(
             @PathVariable Long id) {
 

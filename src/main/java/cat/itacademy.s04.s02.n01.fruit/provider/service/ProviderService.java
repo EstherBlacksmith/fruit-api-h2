@@ -4,10 +4,13 @@ import cat.itacademy.s04.s02.n01.fruit.provider.dto.ProviderRequest;
 import cat.itacademy.s04.s02.n01.fruit.provider.dto.ProviderResponse;
 import cat.itacademy.s04.s02.n01.fruit.provider.dto.Provider;
 import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderDuplicateNameException;
+import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderHasFruitsAssociatedException;
 import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderNotFoundException;
 import cat.itacademy.s04.s02.n01.fruit.provider.repository.ProviderRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -76,10 +79,16 @@ public class ProviderService {
         return providerRepository.findById(id)
                 .orElseThrow(() -> new ProviderNotFoundException("Provider doesn't exists"));
     }
-
+    @Transactional
     public Enum<HttpStatus> delete(Long id) {
         Provider provider = providerRepository.findById(id).orElseThrow(() -> new ProviderNotFoundException("Provider doesn't exists"));
-        providerRepository.delete(provider);
+
+        try {
+            providerRepository.delete(provider);
+            providerRepository.flush();
+        } catch (DataIntegrityViolationException ex) {
+            throw new ProviderHasFruitsAssociatedException("Cannot delete provider due to existing fruits");
+        }
         return HttpStatus.NO_CONTENT;
     }
 }

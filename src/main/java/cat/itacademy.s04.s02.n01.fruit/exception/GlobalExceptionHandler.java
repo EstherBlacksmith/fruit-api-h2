@@ -4,6 +4,7 @@ import cat.itacademy.s04.s02.n01.fruit.fruit.exception.FruitNotFoundException;
 import cat.itacademy.s04.s02.n01.fruit.fruit.exception.InvalidFruitRequestException;
 import cat.itacademy.s04.s02.n01.fruit.provider.exception.InvalidProviderRequestException;
 import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderDuplicateNameException;
+import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderHasFruitsAssociatedException;
 import cat.itacademy.s04.s02.n01.fruit.provider.exception.ProviderNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +52,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidProviderRequestException.class)
     public ResponseEntity<String> handleProviderBadRequest(InvalidProviderRequestException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
+
+    @ExceptionHandler(ProviderHasFruitsAssociatedException.class)
+    public ResponseEntity<String> handleProviderFruitsAssociated(ProviderHasFruitsAssociatedException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+
 
 }
